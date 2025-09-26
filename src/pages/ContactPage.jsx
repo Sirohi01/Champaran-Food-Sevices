@@ -1,8 +1,11 @@
+import { useI18n } from '../i18n/i18n';
+
 const ContactPage = () => {
+  const { t } = useI18n();
   return (
     <div className="min-h-[60vh]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6">Contact Us</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6">{t('pages.contactTitle')}</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 bg-white border rounded-xl p-6">
             <h2 className="text-lg font-semibold mb-4">Send us a message</h2>
@@ -12,7 +15,7 @@ const ContactPage = () => {
               <input className="sm:col-span-2 border rounded-lg px-3 py-2" placeholder="Email" />
               <textarea className="sm:col-span-2 border rounded-lg px-3 py-2 h-32" placeholder="Your message"></textarea>
               <div className="sm:col-span-2">
-                <button type="button" className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg">Send</button>
+                <button type="button" className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg">{t('common.send')}</button>
               </div>
             </form>
           </div>

@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { CartIcon, MenuIcon, CloseIcon, SearchIcon, UserIcon, LocationIcon } from './Icons';
+import SpriteIcons from './SpriteIcons';
+import { useI18n, Languages } from '../i18n/i18n';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(3); // Example cart count
+  const [cartCount, setCartCount] = useState(3);
+  const { t, lang, setLang } = useI18n();
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
@@ -58,24 +61,38 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <NavLink to="/" end className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
-              Home
+            <NavLink to="/" end className={({isActive}) => `flex items-center font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
+              <SpriteIcons name="home" className="w-4 h-4 mr-1" />
+              {t('nav.home')}
             </NavLink>
-            <NavLink to="/categories" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
-              Categories
+            <NavLink to="/categories" className={({isActive}) => `flex items-center font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
+              <SpriteIcons name="categories" className="w-4 h-4 mr-1" />
+              {t('nav.categories')}
             </NavLink>
-            <NavLink to="/offers" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
-              Bulk Pricing
+            <NavLink to="/offers" className={({isActive}) => `flex items-center font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
+              <SpriteIcons name="offers" className="w-4 h-4 mr-1" />
+              {t('nav.offers')}
             </NavLink>
-            <NavLink to="/about" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
-              About Us
+            <NavLink to="/about" className={({isActive}) => `flex items-center font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
+              <SpriteIcons name="about" className="w-4 h-4 mr-1" />
+              {t('nav.about')}
             </NavLink>
-            <NavLink to="/contact" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
-              Contact
+            <NavLink to="/contact" className={({isActive}) => `flex items-center font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
+              <SpriteIcons name="contact" className="w-4 h-4 mr-1" />
+              {t('nav.contact')}
             </NavLink>
-            <Link to="/login" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
-              Login
+            <Link to="/login" className="flex items-center text-gray-700 hover:text-green-600 font-medium transition-colors">
+              <SpriteIcons name="login" className="w-4 h-4 mr-1" />
+              {t('nav.login')}
             </Link>
+            <div className="ml-2">
+              <select value={lang} onChange={(e) => setLang(e.target.value)} className="border border-gray-300 rounded-md text-sm px-2 py-1">
+                <option value={Languages.EN}>EN</option>
+                <option value={Languages.HI}>हिंदी</option>
+                <option value={Languages.BN}>বাংলা</option>
+                <option value={Languages.GU}>ગુજરાતી</option>
+              </select>
+            </div>
           </nav>
 
           {/* Mobile Menu */}
@@ -110,46 +127,61 @@ const Header = () => {
                 <NavLink
                   to="/"
                   end
-                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  className={({isActive}) => `flex items-center px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Home
+                  <SpriteIcons name="home" className="w-4 h-4 mr-2" />
+                  {t('nav.home')}
                 </NavLink>
                 <NavLink
                   to="/categories"
-                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  className={({isActive}) => `flex items-center px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Categories
+                  <SpriteIcons name="categories" className="w-4 h-4 mr-2" />
+                  {t('nav.categories')}
                 </NavLink>
                 <NavLink
                   to="/offers"
-                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  className={({isActive}) => `flex items-center px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Offers
+                  <SpriteIcons name="offers" className="w-4 h-4 mr-2" />
+                  {t('nav.offers')}
                 </NavLink>
                 <NavLink
                   to="/about"
-                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  className={({isActive}) => `flex items-center px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  About
+                  <SpriteIcons name="about" className="w-4 h-4 mr-2" />
+                  {t('nav.about')}
                 </NavLink>
                 <NavLink
                   to="/contact"
-                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  className={({isActive}) => `flex items-center px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Contact
+                  <SpriteIcons name="contact" className="w-4 h-4 mr-2" />
+                  {t('nav.contact')}
                 </NavLink>
                 <Link
                   to="/login"
-                  className="block px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
+                  className="flex items-center px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login
+                  <SpriteIcons name="login" className="w-4 h-4 mr-2" />
+                  {t('nav.login')}
                 </Link>
+                <div className="px-3 py-2">
+                  <label className="text-xs text-gray-500 mr-2">{t('common.language')}</label>
+                  <select value={lang} onChange={(e) => { setLang(e.target.value); setIsMenuOpen(false); }} className="border border-gray-300 rounded-md text-sm px-2 py-1">
+                    <option value={Languages.EN}>EN</option>
+                    <option value={Languages.HI}>हिंदी</option>
+                    <option value={Languages.BN}>বাংলা</option>
+                    <option value={Languages.GU}>ગુજરાતી</option>
+                  </select>
+                </div>
           </div>
         </div>
       )}

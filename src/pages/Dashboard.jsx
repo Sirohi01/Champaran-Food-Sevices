@@ -1,8 +1,11 @@
+import SpriteIcons from '../components/SpriteIcons';
+import { useI18n } from '../i18n/i18n';
+
 const Dashboard = () => {
   const stats = [
-    { label: 'Orders', value: 128, delta: '+12% vs last week' },
-    { label: 'Inventory Items', value: 5320, delta: '+3% restocked' },
-    { label: 'Revenue', value: '₹2.4L', delta: '+8% vs last week' }
+    { label: 'Orders', value: 128, delta: '+12% vs last week', icon: 'orders', color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Inventory Items', value: 5320, delta: '+3% restocked', icon: 'inventory', color: 'text-green-600', bg: 'bg-green-50' },
+    { label: 'Revenue', value: '₹2.4L', delta: '+8% vs last week', icon: 'stats', color: 'text-purple-600', bg: 'bg-purple-50' }
   ];
 
   const recentOrders = [
@@ -17,23 +20,32 @@ const Dashboard = () => {
     { sku: 'ATTA-50KG', name: 'Wheat Flour 50kg', stock: 9 }
   ];
 
+  const { t } = useI18n();
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <h1 className="text-2xl md:text-3xl font-bold">Dashboard Overview</h1>
+      <h1 className="text-2xl md:text-3xl font-bold">{t('dashboard.overview')}</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((s) => (
-          <div key={s.label} className="p-4 bg-white rounded-lg border">
-            <div className="text-sm text-gray-500">{s.label}</div>
-            <div className="text-2xl font-bold">{s.value}</div>
-            <div className="text-xs text-green-600 mt-1">{s.delta}</div>
+          <div key={s.label} className="p-6 bg-white rounded-xl border shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-3">
+              <div className={`p-3 rounded-lg ${s.bg}`}>
+                <SpriteIcons name={s.icon} className="w-6 h-6" color={s.color.replace('text-', '')} />
+              </div>
+              <div className="text-xs text-green-600 font-medium">{s.delta}</div>
+            </div>
+            <div className="text-sm text-gray-500 mb-1">{s.label}</div>
+            <div className="text-2xl font-bold text-gray-900">{s.value}</div>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-lg border">
-          <div className="p-4 border-b font-semibold">Recent Orders</div>
+        <div className="lg:col-span-2 bg-white rounded-xl border shadow-sm">
+          <div className="p-4 border-b font-semibold flex items-center">
+            <SpriteIcons name="orders" className="w-5 h-5 text-blue-600 mr-2" />
+            {t('dashboard.recentOrders')}
+          </div>
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead className="bg-gray-50">
@@ -65,8 +77,11 @@ const Dashboard = () => {
             </table>
           </div>
         </div>
-        <div className="bg-white rounded-lg border">
-          <div className="p-4 border-b font-semibold">Low Inventory</div>
+        <div className="bg-white rounded-xl border shadow-sm">
+          <div className="p-4 border-b font-semibold flex items-center">
+            <SpriteIcons name="warning" className="w-5 h-5 text-orange-600 mr-2" />
+            {t('dashboard.lowInventory')}
+          </div>
           <ul className="divide-y">
             {lowInventory.map((i) => (
               <li key={i.sku} className="px-4 py-3 flex items-center justify-between">

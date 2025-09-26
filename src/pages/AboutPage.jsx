@@ -1,9 +1,12 @@
+import { useI18n } from '../i18n/i18n';
+
 const AboutPage = () => {
+  const { t } = useI18n();
   return (
     <div className="min-h-[60vh]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
         <header>
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">About champaaran foods</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-3">{t('pages.aboutTitle')}</h1>
           <p className="text-gray-700 max-w-2xl">We are a wholesale supplier serving grocery stores and HoReCa with reliable B2B supply at transparent prices.</p>
         </header>
 
