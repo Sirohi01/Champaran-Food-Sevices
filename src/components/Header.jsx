@@ -23,7 +23,7 @@ const Header = () => {
               <span className="hidden md:inline">Bulk orders • Wholesale rates • B2B Supply</span>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="hidden md:inline">Call: +91 98765 43210</span>
+              <span className="hidden md:inline">Call: +91 9568259784</span>
               <Link to="/login" className="hover:text-green-200 transition-colors flex items-center">
                 <UserIcon className="w-4 h-4 mr-1" />
                 <span className="text-sm hidden sm:inline">Login</span>
