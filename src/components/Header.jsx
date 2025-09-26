@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { CartIcon, MenuIcon, CloseIcon, SearchIcon, UserIcon, LocationIcon } from './Icons';
 
 const Header = () => {
@@ -20,9 +21,10 @@ const Header = () => {
             </div>
             <div className="flex items-center space-x-4">
               <span className="hidden md:inline">Call: +91 98765 43210</span>
-              <button className="hover:text-green-200 transition-colors">
-                <UserIcon className="w-4 h-4" />
-              </button>
+              <Link to="/login" className="hover:text-green-200 transition-colors flex items-center">
+                <UserIcon className="w-4 h-4 mr-1" />
+                <span className="text-sm hidden sm:inline">Login</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -56,21 +58,24 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            <NavLink to="/" end className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
               Home
-            </a>
-            <a href="#categories" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            </NavLink>
+            <NavLink to="/categories" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
               Categories
-            </a>
-            <a href="#offers" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            </NavLink>
+            <NavLink to="/offers" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
               Bulk Pricing
-            </a>
-            <a href="#about" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            </NavLink>
+            <NavLink to="/about" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
               About Us
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+            </NavLink>
+            <NavLink to="/contact" className={({isActive}) => `font-medium transition-colors ${isActive ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}>
               Contact
-            </a>
+            </NavLink>
+            <Link to="/login" className="text-gray-700 hover:text-green-600 font-medium transition-colors">
+              Login
+            </Link>
           </nav>
 
           {/* Mobile Menu */}
@@ -102,41 +107,49 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 py-2 space-y-2">
-            <a
-              href="#home"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </a>
-            <a
-              href="#categories"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Categories
-            </a>
-            <a
-              href="#offers"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Offers
-            </a>
-            <a
-              href="#about"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              About
-            </a>
-            <a
-              href="#contact"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </a>
+                <NavLink
+                  to="/"
+                  end
+                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
+                </NavLink>
+                <NavLink
+                  to="/categories"
+                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Categories
+                </NavLink>
+                <NavLink
+                  to="/offers"
+                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Offers
+                </NavLink>
+                <NavLink
+                  to="/about"
+                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  About
+                </NavLink>
+                <NavLink
+                  to="/contact"
+                  className={({isActive}) => `block px-3 py-2 rounded-md transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contact
+                </NavLink>
+                <Link
+                  to="/login"
+                  className="block px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
           </div>
         </div>
       )}
