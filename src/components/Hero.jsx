@@ -1,6 +1,9 @@
 import { StarIcon } from './Icons';
+import { useI18n } from '../i18n/i18n';
 
 const Hero = () => {
+  const { t } = useI18n();
+  
   return (
     <section id="home" className="relative overflow-hidden">
       {/* Background with gradient and pattern */}
@@ -19,7 +22,7 @@ const Hero = () => {
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-100 text-orange-800 text-sm font-medium mb-6">
               <StarIcon className="w-4 h-4 mr-2" />
-              #1 Wholesale Supplier in Delhi
+              {t('hero.badge')}
             </div>
 
             {/* Main Heading */}
@@ -39,23 +42,22 @@ const Hero = () => {
 
             {/* Subtitle */}
             <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0">
-              छोटे और बड़े grocery stores के लिए wholesale rates पर quality products।{' '}
-              <span className="font-semibold text-orange-600">champaaran foods</span> के साथ अपने business को बढ़ाएं।
+              {t('hero.subtitle')}
             </p>
 
             {/* Features List */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 px-4 sm:px-0">
               <div className="flex items-center justify-center lg:justify-start space-x-2 bg-orange-50 rounded-lg py-2 px-3 sm:bg-transparent sm:py-0 sm:px-0">
                 <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></div>
-                <span className="text-gray-700 font-medium text-sm sm:text-base">Bulk Supply</span>
+                <span className="text-gray-700 font-medium text-sm sm:text-base">{t('hero.bulkSupply')}</span>
               </div>
               <div className="flex items-center justify-center lg:justify-start space-x-2 bg-blue-50 rounded-lg py-2 px-3 sm:bg-transparent sm:py-0 sm:px-0">
                 <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
-                <span className="text-gray-700 font-medium text-sm sm:text-base">Wholesale Rates</span>
+                <span className="text-gray-700 font-medium text-sm sm:text-base">{t('hero.wholesaleRates')}</span>
               </div>
               <div className="flex items-center justify-center lg:justify-start space-x-2 bg-green-50 rounded-lg py-2 px-3 sm:bg-transparent sm:py-0 sm:px-0">
                 <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                <span className="text-gray-700 font-medium text-sm sm:text-base">B2B Service</span>
+                <span className="text-gray-700 font-medium text-sm sm:text-base">{t('hero.b2bService')}</span>
               </div>
             </div>
 
