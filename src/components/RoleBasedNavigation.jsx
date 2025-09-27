@@ -14,47 +14,47 @@ const RoleBasedNavigation = () => {
   const getRoleNavigation = (role) => {
     const navigationItems = {
       [USER_ROLES.SUPER_ADMIN]: [
-        { name: 'System Overview', icon: 'dashboard', path: '/dashboard/super-admin', color: 'red' },
-        { name: 'User Management', icon: 'users', path: '/dashboard/user-management', color: 'blue' },
-        { name: 'Store Management', icon: 'store', path: '/dashboard/store-management', color: 'green' },
-        { name: 'System Settings', icon: 'settings', path: '/dashboard/settings', color: 'purple' },
-        { name: 'Audit Logs', icon: 'logs', path: '/dashboard/audit-logs', color: 'orange' },
-        { name: 'Reports', icon: 'report', path: '/dashboard/reports', color: 'indigo' }
+        { name: t('navigation.systemOverview'), icon: 'dashboard', path: '/dashboard/super-admin', color: 'red' },
+        { name: t('navigation.userManagement'), icon: 'users', path: '/dashboard/user-management', color: 'blue' },
+        { name: t('navigation.storeManagement'), icon: 'store', path: '/dashboard/store-management', color: 'green' },
+        { name: t('navigation.systemSettings'), icon: 'settings', path: '/dashboard/settings', color: 'purple' },
+        { name: t('navigation.auditLogs'), icon: 'logs', path: '/dashboard/audit-logs', color: 'orange' },
+        { name: t('navigation.reports'), icon: 'report', path: '/dashboard/reports', color: 'indigo' }
       ],
       [USER_ROLES.ADMIN]: [
-        { name: 'Store Overview', icon: 'dashboard', path: '/dashboard/admin', color: 'purple' },
-        { name: 'User Management', icon: 'users', path: '/dashboard/user-management', color: 'blue' },
-        { name: 'Store Management', icon: 'store', path: '/dashboard/store-management', color: 'green' },
-        { name: 'Inventory', icon: 'inventory', path: '/dashboard/inventory', color: 'orange' },
-        { name: 'Reports', icon: 'report', path: '/dashboard/reports', color: 'indigo' }
+        { name: t('navigation.storeOverview'), icon: 'dashboard', path: '/dashboard/admin', color: 'purple' },
+        { name: t('navigation.userManagement'), icon: 'users', path: '/dashboard/user-management', color: 'blue' },
+        { name: t('navigation.storeManagement'), icon: 'store', path: '/dashboard/store-management', color: 'green' },
+        { name: t('navigation.inventory'), icon: 'inventory', path: '/dashboard/inventory', color: 'orange' },
+        { name: t('navigation.reports'), icon: 'report', path: '/dashboard/reports', color: 'indigo' }
       ],
       [USER_ROLES.MANAGER]: [
-        { name: 'Operations', icon: 'dashboard', path: '/dashboard/manager', color: 'blue' },
-        { name: 'Team Performance', icon: 'team', path: '/dashboard/team', color: 'green' },
-        { name: 'Sales Reports', icon: 'sales', path: '/dashboard/sales', color: 'purple' },
-        { name: 'Inventory', icon: 'inventory', path: '/dashboard/inventory', color: 'orange' },
-        { name: 'Purchases', icon: 'purchase', path: '/dashboard/purchases', color: 'red' }
+        { name: t('navigation.operations'), icon: 'dashboard', path: '/dashboard/manager', color: 'blue' },
+        { name: t('navigation.teamPerformance'), icon: 'team', path: '/dashboard/team', color: 'green' },
+        { name: t('navigation.salesReports'), icon: 'sales', path: '/dashboard/sales', color: 'purple' },
+        { name: t('navigation.inventory'), icon: 'inventory', path: '/dashboard/inventory', color: 'orange' },
+        { name: t('navigation.purchases'), icon: 'purchase', path: '/dashboard/purchases', color: 'red' }
       ],
       [USER_ROLES.SALES_MAN]: [
-        { name: 'Sales Dashboard', icon: 'dashboard', path: '/dashboard/salesman', color: 'green' },
-        { name: 'Customers', icon: 'customers', path: '/dashboard/customers', color: 'blue' },
-        { name: 'Products', icon: 'products', path: '/dashboard/products', color: 'purple' },
-        { name: 'Sales History', icon: 'history', path: '/dashboard/sales-history', color: 'orange' },
-        { name: 'Targets', icon: 'target', path: '/dashboard/targets', color: 'red' }
+        { name: t('navigation.salesDashboard'), icon: 'dashboard', path: '/dashboard/salesman', color: 'green' },
+        { name: t('navigation.customers'), icon: 'customers', path: '/dashboard/customers', color: 'blue' },
+        { name: t('navigation.products'), icon: 'products', path: '/dashboard/products', color: 'purple' },
+        { name: t('navigation.salesHistory'), icon: 'history', path: '/dashboard/sales-history', color: 'orange' },
+        { name: t('navigation.targets'), icon: 'target', path: '/dashboard/targets', color: 'red' }
       ],
       [USER_ROLES.PURCHASE_MAN]: [
-        { name: 'Purchase Dashboard', icon: 'dashboard', path: '/dashboard/purchase', color: 'orange' },
-        { name: 'Suppliers', icon: 'suppliers', path: '/dashboard/suppliers', color: 'blue' },
-        { name: 'Inventory Needs', icon: 'inventory', path: '/dashboard/inventory-needs', color: 'green' },
-        { name: 'Purchase History', icon: 'history', path: '/dashboard/purchase-history', color: 'purple' },
-        { name: 'Budget', icon: 'budget', path: '/dashboard/budget', color: 'red' }
+        { name: t('navigation.purchaseDashboard'), icon: 'dashboard', path: '/dashboard/purchase', color: 'orange' },
+        { name: t('navigation.suppliers'), icon: 'suppliers', path: '/dashboard/suppliers', color: 'blue' },
+        { name: t('navigation.inventoryNeeds'), icon: 'inventory', path: '/dashboard/inventory-needs', color: 'green' },
+        { name: t('navigation.purchaseHistory'), icon: 'history', path: '/dashboard/purchase-history', color: 'purple' },
+        { name: t('navigation.budget'), icon: 'budget', path: '/dashboard/budget', color: 'red' }
       ],
       [USER_ROLES.USER]: [
-        { name: 'My Dashboard', icon: 'dashboard', path: '/dashboard/user', color: 'indigo' },
-        { name: 'My Orders', icon: 'orders', path: '/dashboard/orders', color: 'blue' },
-        { name: 'Products', icon: 'products', path: '/dashboard/products', color: 'green' },
-        { name: 'Profile', icon: 'profile', path: '/dashboard/profile', color: 'purple' },
-        { name: 'Support', icon: 'support', path: '/dashboard/support', color: 'orange' }
+        { name: t('navigation.myDashboard'), icon: 'dashboard', path: '/dashboard/user', color: 'indigo' },
+        { name: t('navigation.myOrders'), icon: 'orders', path: '/dashboard/orders', color: 'blue' },
+        { name: t('navigation.products'), icon: 'products', path: '/dashboard/products', color: 'green' },
+        { name: t('navigation.profile'), icon: 'profile', path: '/dashboard/profile', color: 'purple' },
+        { name: t('navigation.support'), icon: 'support', path: '/dashboard/support', color: 'orange' }
       ]
     };
 

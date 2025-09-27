@@ -76,6 +76,7 @@ const RoleDashboard = () => {
           '/dashboard/create-user',
           '/dashboard/store-management',
           '/dashboard/create-store',
+          '/dashboard/stores',  // Added stores page to valid paths
           '/dashboard/staff-management',
           '/dashboard/orders',
           '/dashboard/purchases',
@@ -84,34 +85,38 @@ const RoleDashboard = () => {
           '/dashboard/reports',
           '/dashboard/profile'
         ];
-
-        // Check if current path is a valid dashboard path
-        const isValidDashboardPath = validDashboardPaths.some(path => 
-          currentPath.startsWith(path)
-        );
-
-        // Only redirect if we're on the exact /dashboard path (not a sub-path)
-        if (currentPath === '/dashboard') {
-          const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/home';
+        // Get the role-specific dashboard path
+        const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/user';
+        
+        // If we're on /dashboard or /dashboard/home, redirect to role-specific dashboard
+        if (currentPath === '/dashboard' || currentPath === '/dashboard/' || currentPath === '/dashboard/home') {
           if (isDevelopment()) {
-            console.log(`Redirecting from /dashboard to role-specific dashboard: ${roleDashboardPath}`);
+            console.log(`[RoleDashboard] Redirecting from ${currentPath} to role dashboard: ${roleDashboardPath}`);
           }
           navigate(roleDashboardPath, { replace: true });
           return;
         }
-
-        // If we're on a valid dashboard path or any dashboard sub-path, don't redirect
-        if (currentPath.startsWith('/dashboard')) {
-          setLoading(false);
-          return;
+        
+        // If we're not on our role-specific dashboard, redirect there
+        if (!currentPath.startsWith(roleDashboardPath)) {
+          // Allow access to other dashboard pages if they're in the valid paths
+          const isOtherValidPath = validDashboardPaths.some(path => 
+            path !== '/dashboard/home' && 
+            path !== roleDashboardPath && 
+            currentPath.startsWith(path)
+          );
+          
+          if (!isOtherValidPath) {
+            if (isDevelopment()) {
+              console.log(`[RoleDashboard] Redirecting to role dashboard: ${roleDashboardPath}`);
+            }
+            navigate(roleDashboardPath, { replace: true });
+            return;
+          }
         }
         
-        // If we get here and we're not on a dashboard path, redirect to role dashboard
-        const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/home';
-        if (isDevelopment()) {
-          console.log(`Redirecting to role-specific dashboard: ${roleDashboardPath}`);
-        }
-        navigate(roleDashboardPath, { replace: true });
+        // If we get here, we're on a valid path for our role
+        setLoading(false);
         
       } catch (err) {
         console.error('Error in RoleDashboard:', err);

@@ -1,10 +1,8 @@
 import SpriteIcons from '../components/SpriteIcons';
 import { useI18n } from '../i18n/i18n';
-import { useTheme } from '../contexts/ThemeContext';
 
 const Dashboard = () => {
   const { t } = useI18n();
-  const { isDark } = useTheme();
   
   const stats = [
     { label: t('dashboard.orders'), value: 128, delta: '+12% vs last week', icon: 'orders', color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20', darkBg: 'dark:bg-blue-900/20' },
