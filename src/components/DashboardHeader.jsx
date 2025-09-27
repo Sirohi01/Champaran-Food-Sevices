@@ -39,7 +39,7 @@ const DashboardHeader = ({ onToggleSidebar, onLogout }) => {
           )}
           
           {/* Theme Toggle */}
-          <button 
+          {/* <button 
             onClick={toggleTheme}
             className="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-gray-800 transition-colors"
             aria-label="Toggle theme"
@@ -53,7 +53,7 @@ const DashboardHeader = ({ onToggleSidebar, onLogout }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
               </svg>
             )}
-          </button>
+          </button> */}
           
           {/* Logout Button */}
           <button onClick={onLogout} className="text-sm px-4 py-2 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 dark:from-orange-500 dark:to-red-600 dark:hover:from-orange-600 dark:hover:to-red-700 text-white rounded-lg transition-all duration-200 hover:scale-105 shadow-md">
