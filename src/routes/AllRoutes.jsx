@@ -4,20 +4,23 @@ import Loading from '../components/Loading';
 import PublicLayout from '../layouts/PublicLayout';
 import PrivateLayout from '../layouts/PrivateLayout';
 import ProtectedRoute from '../components/ProtectedRoute';
-import { isAuthenticated, getUserRole, DASHBOARD_ROUTES } from '../services/coreServices';
+import RoleBasedRoute from '../components/RoleBasedRoute';
+import { isAuthenticated, getUserRole, DASHBOARD_ROUTES, USER_ROLES } from '../services/coreServices';
 
 const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const RoleDashboard = lazy(() => import('../pages/RoleDashboard'));
-const SuperAdminDashboard = lazy(() => import('../pages/dashboards/SuperAdminDashboard'));
-const AdminDashboard = lazy(() => import('../pages/dashboards/AdminDashboard'));
-const ManagerDashboard = lazy(() => import('../pages/dashboards/ManagerDashboard'));
-const SalesmanDashboard = lazy(() => import('../pages/dashboards/SalesmanDashboard'));
-const PurchaseDashboard = lazy(() => import('../pages/dashboards/PurchaseDashboard'));
-const UserDashboard = lazy(() => import('../pages/dashboards/UserDashboard'));
+const SuperAdminDashboard = lazy(() => import('../roles/super-admin/pages/SuperAdminDashboard'));
+const AdminDashboard = lazy(() => import('../roles/admin/pages/AdminDashboard'));
+const ManagerDashboard = lazy(() => import('../roles/manager/pages/ManagerDashboard'));
+const SalesmanDashboard = lazy(() => import('../roles/salesman/pages/SalesmanDashboard'));
+const PurchaseDashboard = lazy(() => import('../roles/purchase/pages/PurchaseDashboard'));
+const UserDashboard = lazy(() => import('../roles/user/pages/UserDashboard'));
 const CreateUser = lazy(() => import('../pages/CreateUser'));
+const UserManagement = lazy(() => import('../pages/UserManagement'));
 const CreateStore = lazy(() => import('../pages/CreateStore'));
+const StoreManagement = lazy(() => import('../pages/StoreManagement'));
 const StoresPage = lazy(() => import('../pages/StoresPage'));
 const CategoriesPage = lazy(() => import('../pages/CategoriesPage'));
 const OffersPage = lazy(() => import('../pages/OffersPage'));
@@ -28,7 +31,7 @@ const RoleBasedRedirect = () => {
   useEffect(() => {
     if (isAuthenticated()) {
       const role = getUserRole();
-      const dashboardPath = DASHBOARD_ROUTES[role] || '/dashboard';
+      const dashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/user';
       window.location.href = dashboardPath;
     } else {
       window.location.href = '/login';
@@ -51,25 +54,51 @@ const AllRoutes = () => {
           <Route path="contact" element={<ContactPage />} />
         </Route>
 
-        <Route element={<ProtectedRoute />}>
-          <Route element={<PrivateLayout />}>
-            {/* Root dashboard route - will redirect to role-specific dashboard */}
-            <Route path="dashboard" element={<RoleDashboard />}>
-              <Route index element={<Navigate to="home" replace />} />
-              <Route path="home" element={<Dashboard />} />
-              <Route path="super-admin" element={<SuperAdminDashboard />} />
-              <Route path="admin" element={<AdminDashboard />} />
-              <Route path="manager" element={<ManagerDashboard />} />
-              <Route path="salesman" element={<SalesmanDashboard />} />
-              <Route path="purchase" element={<PurchaseDashboard />} />
-              <Route path="user" element={<UserDashboard />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<PrivateLayout />}>
+                {/* Root dashboard route - will redirect to role-specific dashboard */}
+                <Route path="dashboard" element={<RoleDashboard />}>
+                  <Route index element={<Navigate to="home" replace />} />
+                  <Route path="home" element={<Dashboard />} />
+                  
+                  {/* Role-based dashboard routes with permission checks */}
+                  <Route path="super-admin" element={
+                    <RoleBasedRoute requiredRole={USER_ROLES.SUPER_ADMIN}>
+                      <SuperAdminDashboard />
+                    </RoleBasedRoute>
+                  } />
+                  <Route path="admin" element={
+                    <RoleBasedRoute requiredRole={USER_ROLES.ADMIN}>
+                      <AdminDashboard />
+                    </RoleBasedRoute>
+                  } />
+                  <Route path="manager" element={
+                    <RoleBasedRoute requiredRole={USER_ROLES.MANAGER}>
+                      <ManagerDashboard />
+                    </RoleBasedRoute>
+                  } />
+                  <Route path="salesman" element={
+                    <RoleBasedRoute requiredRole={USER_ROLES.SALES_MAN}>
+                      <SalesmanDashboard />
+                    </RoleBasedRoute>
+                  } />
+                  <Route path="purchase" element={
+                    <RoleBasedRoute requiredRole={USER_ROLES.PURCHASE_MAN}>
+                      <PurchaseDashboard />
+                    </RoleBasedRoute>
+                  } />
+                  <Route path="user" element={
+                    <RoleBasedRoute requiredRole={USER_ROLES.USER}>
+                      <UserDashboard />
+                    </RoleBasedRoute>
+                  } />
               
               {/* User Management Routes */}
-              <Route path="user-management" element={<CreateUser />} />
+              <Route path="user-management" element={<UserManagement />} />
               <Route path="create-user" element={<CreateUser />} />
               
               {/* Store Management Routes */}
-              <Route path="store-management" element={<StoresPage />} />
+              <Route path="store-management" element={<StoreManagement />} />
               <Route path="stores" element={<StoresPage />} />
               <Route path="create-store" element={<CreateStore />} />
               

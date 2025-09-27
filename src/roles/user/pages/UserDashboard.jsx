@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import SpriteIcons from '../../components/SpriteIcons';
-import { useI18n } from '../../i18n/i18n';
-import { useTheme } from '../../contexts/ThemeContext';
-import { getUserData } from '../../services/coreServices';
+import SpriteIcons from '../../../components/SpriteIcons';
+import { useI18n } from '../../../i18n/i18n';
+import { useTheme } from '../../../contexts/ThemeContext';
+import { getUserData } from '../../../services/coreServices';
 
 const UserDashboard = () => {
   const { t } = useI18n();
