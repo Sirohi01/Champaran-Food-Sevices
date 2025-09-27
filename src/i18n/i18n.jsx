@@ -11,14 +11,6 @@ const defaultLang = Languages.EN;
 
 const translations = {
   en: {
-    nav: {
-      home: 'Home',
-      categories: 'Categories',
-      offers: 'Bulk Pricing',
-      about: 'About Us',
-      contact: 'Contact',
-      login: 'Login',
-    },
     dashboard: {
       overview: 'Dashboard Overview',
       recentOrders: 'Recent Orders',
@@ -26,6 +18,125 @@ const translations = {
       orders: 'Orders',
       inventory: 'Inventory',
       settings: 'Settings',
+      createUser: 'Create User',
+      createStore: 'Create Store',
+      manageUsers: 'Manage Users',
+      manageStores: 'Manage Stores',
+      systemSettings: 'System Settings',
+      storeManagement: 'Store Management',
+      staffManagement: 'Staff Management',
+      operations: 'Operations',
+      reports: 'Reports',
+      profile: 'Profile',
+      
+      // Super Admin Dashboard specific keys
+      superAdminTitle: 'Super Admin Dashboard',
+      welcomeMessage: 'Welcome back, {{name}}! Here\'s your system overview.',
+      totalUsers: 'Total Users',
+      totalStores: 'Total Stores',
+      totalRevenue: 'Total Revenue',
+      activeStaff: 'Active Staff',
+      newUsersWeek: '+5 new this week',
+      newStores: '+2 new stores',
+      revenueGrowth: '+12% vs last month',
+      staffCount: '{{count}} staff members',
+      recentUsers: 'Recent Users',
+      systemAlerts: 'System Alerts',
+      quickActions: 'Quick Actions',
+      
+      alerts: {
+        serverMaintenance: 'Server maintenance scheduled for Sunday 2 AM',
+        newFeature: 'New feature: Inventory tracking is now live',
+        syncIssue: 'Store #3 reporting sync issues'
+      },
+      
+      priority: {
+        high: 'HIGH PRIORITY',
+        medium: 'MEDIUM PRIORITY',
+        low: 'LOW PRIORITY'
+      }
+    },
+    userManagement: {
+      title: 'User Management',
+      createUser: 'Create New User',
+      fullName: 'Full Name',
+      email: 'Email Address',
+      phone: 'Phone Number',
+      role: 'Role',
+      store: 'Store',
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      selectRole: 'Select Role',
+      selectStore: 'Select Store',
+      admin: 'Admin',
+      manager: 'Manager',
+      salesPerson: 'Sales Person',
+      purchaseManager: 'Purchase Manager',
+      user: 'User',
+      super_admin: 'Super Admin',
+      create: 'Create User',
+      cancel: 'Cancel',
+      backToDashboard: 'Back to Dashboard',
+      userCreated: 'User created successfully!',
+      validation: {
+        required: 'This field is required',
+        emailInvalid: 'Please enter a valid email',
+        passwordMismatch: 'Passwords do not match',
+        passwordLength: 'Password must be at least 6 characters'
+      }
+    },
+    storeManagement: {
+      title: 'Store Management',
+      createStore: 'Create New Store',
+      storeInfo: 'Store Information',
+      storeName: 'Store Name',
+      description: 'Description',
+      addressInfo: 'Address Information',
+      address: 'Address',
+      city: 'City',
+      state: 'State',
+      pincode: 'Pincode',
+      contactInfo: 'Contact Information',
+      storePhone: 'Store Phone',
+      storeEmail: 'Store Email',
+      managerInfo: 'Manager Information',
+      managerName: 'Manager Name',
+      managerPhone: 'Manager Phone',
+      create: 'Create Store',
+      cancel: 'Cancel',
+      backToDashboard: 'Back to Dashboard',
+      storeCreated: 'Store created successfully!',
+      optional: '(Optional)'
+    },
+    common: {
+      loading: 'Loading...',
+      submit: 'Submit',
+      save: 'Save',
+      edit: 'Edit',
+      delete: 'Delete',
+      search: 'Search',
+      actions: 'Actions',
+      status: 'Status',
+      active: 'Active',
+      inactive: 'Inactive',
+      yes: 'Yes',
+      no: 'No',
+      name: 'Name',
+      email: 'Email',
+      role: 'Role',
+      menu: 'Menu',
+      logout: 'Logout',
+      send: 'Send',
+      language: 'Language',
+      close: 'Close'
+    },
+    nav: {
+      home: 'Home',
+      categories: 'Categories',
+      offers: 'Bulk Pricing',
+      about: 'About Us',
+      contact: 'Contact',
+      login: 'Login',
     },
     pages: {
       aboutTitle: 'About Us',
@@ -138,16 +249,127 @@ const translations = {
       returnPolicy: 'Return Policy',
       shippingPolicy: 'Shipping Policy',
       faq: 'FAQ',
-    },
-    common: {
-      menu: 'Menu',
-      logout: 'Logout',
-      send: 'Send',
-      language: 'Language',
-      close: 'Close',
-    },
+    }
   },
   hi: {
+    dashboard: {
+      overview: 'डैशबोर्ड',
+      recentOrders: 'हाल के आदेश',
+      lowInventory: 'कम इन्वेंटरी',
+      orders: 'आदेश',
+      inventory: 'भंडार',
+      settings: 'सेटिंग्स',
+      createUser: 'उपयोगकर्ता बनाएं',
+      createStore: 'स्टोर बनाएं',
+      manageUsers: 'उपयोगकर्ता प्रबंधित करें',
+      manageStores: 'स्टोर प्रबंधित करें',
+      systemSettings: 'सिस्टम सेटिंग्स',
+      storeManagement: 'स्टोर प्रबंधन',
+      staffManagement: 'स्टाफ प्रबंधन',
+      operations: 'संचालन',
+      reports: 'रिपोर्ट्स',
+      profile: 'प्रोफ़ाइल',
+      
+      superAdminTitle: 'सुपर एडमिन डैशबोर्ड',
+      welcomeMessage: 'वापसी पर स्वागत है, {{name}}! यहाँ आपका सिस्टम अवलोकन है।',
+      totalUsers: 'कुल उपयोगकर्ता',
+      totalStores: 'कुल स्टोर',
+      totalRevenue: 'कुल आय',
+      activeStaff: 'सक्रिय स्टाफ',
+      newUsersWeek: '+5 इस सप्ताह नए',
+      newStores: '+2 नए स्टोर',
+      revenueGrowth: '+12% पिछले महीने की तुलना में',
+      staffCount: '{{count}} स्टाफ सदस्य',
+      recentUsers: 'हाल के उपयोगकर्ता',
+      systemAlerts: 'सिस्टम अलर्ट',
+      quickActions: 'त्वरित कार्य',
+      
+      alerts: {
+        serverMaintenance: 'रविवार सुबह 2 बजे सर्वर रखरखाव निर्धारित',
+        newFeature: 'नई सुविधा: इन्वेंट्री ट्रैकिंग अब लाइव है',
+        syncIssue: 'स्टोर #3 में सिंक समस्या की रिपोर्ट'
+      },
+      
+      priority: {
+        high: 'उच्च प्राथमिकता',
+        medium: 'मध्यम प्राथमिकता',
+        low: 'निम्न प्राथमिकता'
+      }
+    },
+    userManagement: {
+      title: 'उपयोगकर्ता प्रबंधन',
+      createUser: 'नया उपयोगकर्ता बनाएं',
+      fullName: 'पूरा नाम',
+      email: 'ईमेल पता',
+      phone: 'फ़ोन नंबर',
+      role: 'भूमिका',
+      store: 'स्टोर',
+      password: 'पासवर्ड',
+      confirmPassword: 'पासवर्ड की पुष्टि करें',
+      selectRole: 'भूमिका चुनें',
+      selectStore: 'स्टोर चुनें',
+      admin: 'व्यवस्थापक',
+      manager: 'प्रबंधक',
+      salesPerson: 'विक्रेता',
+      purchaseManager: 'खरीद प्रबंधक',
+      user: 'उपयोगकर्ता',
+      super_admin: 'सुपर व्यवस्थापक',
+      create: 'उपयोगकर्ता बनाएं',
+      cancel: 'रद्द करें',
+      backToDashboard: 'डैशबोर्ड पर वापस जाएं',
+      userCreated: 'उपयोगकर्ता सफलतापूर्वक बनाया गया!',
+      validation: {
+        required: 'यह फ़ील्ड आवश्यक है',
+        emailInvalid: 'कृपया मान्य ईमेल दर्ज करें',
+        passwordMismatch: 'पासवर्ड मेल नहीं खाते',
+        passwordLength: 'पासवर्ड कम से कम 6 वर्णों का होना चाहिए'
+      }
+    },
+    storeManagement: {
+      title: 'स्टोर प्रबंधन',
+      createStore: 'नया स्टोर बनाएं',
+      storeInfo: 'स्टोर की जानकारी',
+      storeName: 'स्टोर का नाम',
+      description: 'विवरण',
+      addressInfo: 'पता विवरण',
+      address: 'पता',
+      city: 'शहर',
+      state: 'राज्य',
+      pincode: 'पिन कोड',
+      contactInfo: 'संपर्क जानकारी',
+      storePhone: 'स्टोर फोन',
+      storeEmail: 'स्टोर ईमेल',
+      managerInfo: 'प्रबंधक की जानकारी',
+      managerName: 'प्रबंधक का नाम',
+      managerPhone: 'प्रबंधक फोन',
+      create: 'स्टोर बनाएं',
+      cancel: 'रद्द करें',
+      backToDashboard: 'डैशबोर्ड पर वापस जाएं',
+      storeCreated: 'स्टोर सफलतापूर्वक बनाया गया!',
+      optional: '(वैकल्पिक)'
+    },
+    common: {
+      loading: 'लोड हो रहा है...',
+      submit: 'जमा करें',
+      save: 'सहेजें',
+      edit: 'संपादित करें',
+      delete: 'हटाएं',
+      search: 'खोजें',
+      actions: 'कार्रवाइयाँ',
+      status: 'स्थिति',
+      active: 'सक्रिय',
+      inactive: 'निष्क्रिय',
+      yes: 'हाँ',
+      no: 'नहीं',
+      name: 'नाम',
+      email: 'ईमेल',
+      role: 'भूमिका',
+      menu: 'मेनू',
+      logout: 'लॉगआउट',
+      send: 'भेजें',
+      language: 'भाषा',
+      close: 'बंद करें'
+    },
     nav: {
       home: 'होम',
       categories: 'श्रेणियाँ',
@@ -155,14 +377,6 @@ const translations = {
       about: 'हमारे बारे में',
       contact: 'संपर्क',
       login: 'लॉगिन',
-    },
-    dashboard: {
-      overview: 'डैशबोर्ड अवलोकन',
-      recentOrders: 'हाल के ऑर्डर',
-      lowInventory: 'कम स्टॉक',
-      orders: 'ऑर्डर',
-      inventory: 'इन्वेंटरी',
-      settings: 'सेटिंग्स',
     },
     pages: {
       aboutTitle: 'हमारे बारे में',
@@ -275,16 +489,127 @@ const translations = {
       returnPolicy: 'वापसी नीति',
       shippingPolicy: 'शिपिंग नीति',
       faq: 'अक्सर पूछे जाने वाले प्रश्न',
-    },
-    common: {
-      menu: 'मेनू',
-      logout: 'लॉगआउट',
-      send: 'भेजें',
-      language: 'भाषा',
-      close: 'बंद करें',
-    },
+    }
   },
   bn: {
+    dashboard: {
+      overview: 'ড্যাশবোর্ড',
+      recentOrders: 'সাম্প্রতিক অর্ডার',
+      lowInventory: 'কম ইনভেন্টরি',
+      orders: 'অর্ডার',
+      inventory: 'ইনভেন্টরি',
+      settings: 'সেটিংস',
+      createUser: 'ব্যবহারকারী তৈরি করুন',
+      createStore: 'স্টোর তৈরি করুন',
+      manageUsers: 'ব্যবহারকারী পরিচালনা করুন',
+      manageStores: 'স্টোর পরিচালনা করুন',
+      systemSettings: 'সিস্টেম সেটিংস',
+      storeManagement: 'স্টোর ব্যবস্থাপনা',
+      staffManagement: 'স্টাফ ব্যবস্থাপনা',
+      operations: 'অপারেশন',
+      reports: 'রিপোর্ট',
+      profile: 'প্রোফাইল',
+      
+      superAdminTitle: 'সুপার অ্যাডমিন ড্যাশবোর্ড',
+      welcomeMessage: 'স্বাগতম, {{name}}! এখানে আপনার সিস্টেম ওভারভিউ।',
+      totalUsers: 'মোট ব্যবহারকারী',
+      totalStores: 'মোট স্টোর',
+      totalRevenue: 'মোট আয়',
+      activeStaff: 'সক্রিয় স্টাফ',
+      newUsersWeek: '+৫ এই সপ্তাহে নতুন',
+      newStores: '+২ নতুন স্টোর',
+      revenueGrowth: '+১২% গত মাসের তুলনায়',
+      staffCount: '{{count}} স্টাফ সদস্য',
+      recentUsers: 'সাম্প্রতিক ব্যবহারকারী',
+      systemAlerts: 'সিস্টেম অ্যালার্ট',
+      quickActions: 'দ্রুত কর্ম',
+      
+      alerts: {
+        serverMaintenance: 'রবিবার সকাল ২টায় সার্ভার রক্ষণাবেক্ষণ নির্ধারিত',
+        newFeature: 'নতুন বৈশিষ্ট্য: ইনভেন্টরি ট্র্যাকিং এখন লাইভ',
+        syncIssue: 'স্টোর #৩ সিঙ্ক সমস্যার রিপোর্ট করছে'
+      },
+      
+      priority: {
+        high: 'উচ্চ অগ্রাধিকার',
+        medium: 'মধ্যম অগ্রাধিকার',
+        low: 'নিম্ন অগ্রাধিকার'
+      }
+    },
+    userManagement: {
+      title: 'ব্যবহারকারী ব্যবস্থাপনা',
+      createUser: 'নতুন ব্যবহারকারী তৈরি করুন',
+      fullName: 'পুরো নাম',
+      email: 'ইমেল ঠিকানা',
+      phone: 'ফোন নম্বর',
+      role: 'ভূমিকা',
+      store: 'স্টোর',
+      password: 'পাসওয়ার্ড',
+      confirmPassword: 'পাসওয়ার্ড নিশ্চিত করুন',
+      selectRole: 'ভূমিকা নির্বাচন করুন',
+      selectStore: 'স্টোর নির্বাচন করুন',
+      admin: 'অ্যাডমিন',
+      manager: 'ম্যানেজার',
+      salesPerson: 'বিক্রয়কর্মী',
+      purchaseManager: 'ক্রয় ব্যবস্থাপক',
+      user: 'ব্যবহারকারী',
+      super_admin: 'সুপার অ্যাডমিন',
+      create: 'ব্যবহারকারী তৈরি করুন',
+      cancel: 'বাতিল করুন',
+      backToDashboard: 'ড্যাশবোর্ডে ফিরে যান',
+      userCreated: 'ব্যবহারকারী সফলভাবে তৈরি হয়েছে!',
+      validation: {
+        required: 'এই ফিল্ডটি প্রয়োজন',
+        emailInvalid: 'বৈধ ইমেল ঠিকানা লিখুন',
+        passwordMismatch: 'পাসওয়ার্ড মেলে নি',
+        passwordLength: 'পাসওয়ার্ড কমপক্ষে 6 অক্ষরের হতে হবে'
+      }
+    },
+    storeManagement: {
+      title: 'স্টোর ব্যবস্থাপনা',
+      createStore: 'নতুন স্টোর তৈরি করুন',
+      storeInfo: 'স্টোর তথ্য',
+      storeName: 'স্টোরের নাম',
+      description: 'বিবরণ',
+      addressInfo: 'ঠিকানা তথ্য',
+      address: 'ঠিকানা',
+      city: 'শহর',
+      state: 'রাজ্য',
+      pincode: 'পিনকোড',
+      contactInfo: 'যোগাযোগের তথ্য',
+      storePhone: 'স্টোর ফোন',
+      storeEmail: 'স্টোর ইমেল',
+      managerInfo: 'ম্যানেজারের তথ্য',
+      managerName: 'ম্যানেজারের নাম',
+      managerPhone: 'ম্যানেজারের ফোন',
+      create: 'স্টোর তৈরি করুন',
+      cancel: 'বাতিল করুন',
+      backToDashboard: 'ড্যাশবোর্ডে ফিরে যান',
+      storeCreated: 'স্টোর সফলভাবে তৈরি হয়েছে!',
+      optional: '(ঐচ্ছিক)'
+    },
+    common: {
+      loading: 'লোড হচ্ছে...',
+      submit: 'জমা দিন',
+      save: 'সংরক্ষণ করুন',
+      edit: 'সম্পাদনা করুন',
+      delete: 'মুছুন',
+      search: 'খুঁজুন',
+      actions: 'ক্রিয়াকলাপ',
+      status: 'স্থিতি',
+      active: 'সক্রিয়',
+      inactive: 'নিষ্ক্রিয়',
+      yes: 'হ্যাঁ',
+      no: 'না',
+      name: 'নাম',
+      email: 'ইমেল',
+      role: 'ভূমিকা',
+      menu: 'মেনু',
+      logout: 'লগআউট',
+      send: 'পাঠান',
+      language: 'ভাষা',
+      close: 'বন্ধ'
+    },
     nav: {
       home: 'হোম',
       categories: 'বিভাগ',
@@ -292,14 +617,6 @@ const translations = {
       about: 'আমাদের সম্পর্কে',
       contact: 'যোগাযোগ',
       login: 'লগইন',
-    },
-    dashboard: {
-      overview: 'ড্যাশবোর্ড ওভারভিউ',
-      recentOrders: 'সাম্প্রতিক অর্ডার',
-      lowInventory: 'কম স্টক',
-      orders: 'অর্ডার',
-      inventory: 'ইনভেন্টরি',
-      settings: 'সেটিংস',
     },
     pages: {
       aboutTitle: 'আমাদের সম্পর্কে',
@@ -353,16 +670,127 @@ const translations = {
       quickLinks: 'দ্রুত লিঙ্ক',
       categories: 'বিভাগ',
       support: 'সহায়তা',
-    },
-    common: {
-      menu: 'মেনু',
-      logout: 'লগআউট',
-      send: 'পাঠান',
-      language: 'ভাষা',
-      close: 'বন্ধ',
-    },
+    }
   },
   gu: {
+    dashboard: {
+      overview: 'ડેશબોર્ડ',
+      recentOrders: 'તાજેતરના ઓર્ડર',
+      lowInventory: 'ઓછી ઇન્વેન્ટરી',
+      orders: 'ઓર્ડર',
+      inventory: 'ઇન્વેન્ટરી',
+      settings: 'સેટિંગ્સ',
+      createUser: 'વપરાશકર્તા બનાવો',
+      createStore: 'સ્ટોર બનાવો',
+      manageUsers: 'વપરાશકર્તાઓનું સંચાલન કરો',
+      manageStores: 'સ્ટોર્સનું સંચાલન કરો',
+      systemSettings: 'સિસ્ટમ સેટિંગ્સ',
+      storeManagement: 'સ્ટોર મેનેજમેન્ટ',
+      staffManagement: 'સ્ટાફ મેનેજમેન્ટ',
+      operations: 'ઓપરેશન્સ',
+      reports: 'રિપોર્ટ્સ',
+      profile: 'પ્રોફાઇલ',
+      
+      superAdminTitle: 'સુપર એડમિન ડેશબોર્ડ',
+      welcomeMessage: 'પાછા આવવા પર સ્વાગત છે, {{name}}! અહીં તમારો સિસ્ટમ ઓવરવ્યુ છે.',
+      totalUsers: 'કુલ વપરાશકર્તાઓ',
+      totalStores: 'કુલ સ્ટોર્સ',
+      totalRevenue: 'કુલ આવક',
+      activeStaff: 'સક્રિય સ્ટાફ',
+      newUsersWeek: '+5 આ અઠવાડિયે નવા',
+      newStores: '+2 નવા સ્ટોર્સ',
+      revenueGrowth: '+12% ગયા મહિના કરતાં',
+      staffCount: '{{count}} સ્ટાફ સભ્યો',
+      recentUsers: 'તાજેતરના વપરાશકર્તાઓ',
+      systemAlerts: 'સિસ્ટમ એલર્ટ્સ',
+      quickActions: 'ઝડપી ક્રિયાઓ',
+      
+      alerts: {
+        serverMaintenance: 'રવિવારે સવારે 2 વાગ્યે સર્વર જાળવણી સુનિશ્ચિત',
+        newFeature: 'નવી સુવિધા: ઇન્વેન્ટરી ટ્રેકિંગ હવે લાઇવ છે',
+        syncIssue: 'સ્ટોર #3 સિંક સમસ્યાઓની જાણ કરી રહ્યું છે'
+      },
+      
+      priority: {
+        high: 'ઉચ્ચ પ્રાથમિકતા',
+        medium: 'મધ્યમ પ્રાથમિકતા',
+        low: 'નીચી પ્રાથમિકતા'
+      }
+    },
+    userManagement: {
+      title: 'વપરાશકર્તા વ્યવસ્થાપન',
+      createUser: 'નવો વપરાશકર્તા બનાવો',
+      fullName: 'પૂરું નામ',
+      email: 'ઈમેલ સરનામું',
+      phone: 'ફોન નંબર',
+      role: 'ભૂમિકા',
+      store: 'સ્ટોર',
+      password: 'પાસવર્ડ',
+      confirmPassword: 'પાસવર્ડની પુષ્ટિ કરો',
+      selectRole: 'ભૂમિકા પસંદ કરો',
+      selectStore: 'સ્ટોર પસંદ કરો',
+      admin: 'એડમિન',
+      manager: 'મેનેજર',
+      salesPerson: 'વેચાણકર્તા',
+      purchaseManager: 'ખરીદી મેનેજર',
+      user: 'વપરાશકર્તા',
+      super_admin: 'સુપર એડમિન',
+      create: 'વપરાશકર્તા બનાવો',
+      cancel: 'રદ કરો',
+      backToDashboard: 'ડેશબોર્ડ પર પાછા જાઓ',
+      userCreated: 'વપરાશકર્તા સફળતાપૂર્વક બનાવવામાં આવ્યો!',
+      validation: {
+        required: 'આ ફીલ્ડ જરૂરી છે',
+        emailInvalid: 'કૃપા કરી માન્ય ઈમેલ દાખલ કરો',
+        passwordMismatch: 'પાસવર્ડ મેળ ખાતા નથી',
+        passwordLength: 'પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરનો હોવો જોઈએ'
+      }
+    },
+    storeManagement: {
+      title: 'સ્ટોર વ્યવસ્થાપન',
+      createStore: 'નવું સ્ટોર બનાવો',
+      storeInfo: 'સ્ટોરની માહિતી',
+      storeName: 'સ્ટોરનું નામ',
+      description: 'વર્ણન',
+      addressInfo: 'સરનામાની માહિતી',
+      address: 'સરનામું',
+      city: 'શહેર',
+      state: 'રાજ્ય',
+      pincode: 'પિન કોડ',
+      contactInfo: 'સંપર્ક માહિતી',
+      storePhone: 'સ્ટોર ફોન',
+      storeEmail: 'સ્ટોર ઈમેલ',
+      managerInfo: 'મેનેજરની માહિતી',
+      managerName: 'મેનેજરનું નામ',
+      managerPhone: 'મેનેજરનો ફોન',
+      create: 'સ્ટોર બનાવો',
+      cancel: 'રદ કરો',
+      backToDashboard: 'ડેશબોર્ડ પર પાછા જાઓ',
+      storeCreated: 'સ્ટોર સફળતાપૂર્વક બનાવવામાં આવ્યું!',
+      optional: '(વૈકલ્પિક)'
+    },
+    common: {
+      loading: 'લોડ થાય છે...',
+      submit: 'સબમિટ કરો',
+      save: 'સેવ કરો',
+      edit: 'એડિટ કરો',
+      delete: 'કાઢી નાખો',
+      search: 'શોધો',
+      actions: 'ક્રિયાઓ',
+      status: 'સ્થિતિ',
+      active: 'સક્રિય',
+      inactive: 'નિષ્ક્રિય',
+      yes: 'હા',
+      no: 'ના',
+      name: 'નામ',
+      email: 'ઈમેલ',
+      role: 'ભૂમિકા',
+      menu: 'મેનુ',
+      logout: 'લૉગઆઉટ',
+      send: 'મોકલો',
+      language: 'ભાષા',
+      close: 'બંધ'
+    },
     nav: {
       home: 'હોમ',
       categories: 'શ્રેણીઓ',
@@ -370,14 +798,6 @@ const translations = {
       about: 'અમારા વિષે',
       contact: 'સંપર્ક',
       login: 'લૉગિન',
-    },
-    dashboard: {
-      overview: 'ડૅશબોર્ડ ઝાંખી',
-      recentOrders: 'તાજેતરના ઓર્ડર',
-      lowInventory: 'ઓછો જથ્થો',
-      orders: 'ઓર્ડર',
-      inventory: 'જથ્થો',
-      settings: 'સેટિંગ્સ',
     },
     pages: {
       aboutTitle: 'અમારા વિષે',
@@ -392,6 +812,9 @@ const translations = {
       bulkSupply: 'બલ્ક સપ્લાય',
       wholesaleRates: 'થોક ભાવ',
       b2bService: 'B2B સેવા',
+      partnerStores: 'પાર્ટનર સ્ટોર',
+      bulkProducts: 'બલ્ક પ્રોડક્ટ્સ',
+      yearsExperience: 'વર્ષોનો અનુભવ',
     },
     categories: {
       badge: 'થોક શ્રેણીઓ',
@@ -400,6 +823,9 @@ const translations = {
       riceGrains: 'ચોખા અને અનાજ',
       vegetables: 'શાકભાજી',
       cookingOil: 'રસોઈ તેલ',
+      flourAtta: 'લોટ',
+      spicesMasala: 'મસાલા',
+      pulsesDal: 'દાળ',
     },
     offers: {
       badge: 'થોક ભાવ',
@@ -416,17 +842,11 @@ const translations = {
       quickLinks: 'ઝડપી લિંક્સ',
       categories: 'શ્રેણીઓ',
       support: 'સપોર્ટ',
-    },
-    common: {
-      menu: 'મેનુ',
-      logout: 'લૉગઆઉટ',
-      send: 'મોકલો',
-      language: 'ભાષા',
-      close: 'બંધ',
-    },
-  },
+    }
+  }
 };
 
+// Enhanced translation function with interpolation support
 const I18nContext = createContext({ lang: defaultLang, setLang: () => {}, t: (k) => k });
 
 export const I18nProvider = ({ children }) => {
@@ -442,13 +862,21 @@ export const I18nProvider = ({ children }) => {
   }, [lang]);
 
   const t = useMemo(() => {
-    return (key) => {
+    return (key, interpolations = {}) => {
       const parts = key.split('.');
       let node = translations[lang] || translations[defaultLang];
       for (const p of parts) {
         node = node?.[p];
       }
-      return typeof node === 'string' ? node : key;
+      
+      if (typeof node === 'string') {
+        // Handle interpolations like {{name}}, {{count}}
+        return node.replace(/\{\{(\w+)\}\}/g, (match, variable) => {
+          return interpolations[variable] !== undefined ? interpolations[variable] : match;
+        });
+      }
+      
+      return key;
     };
   }, [lang]);
 
@@ -457,5 +885,3 @@ export const I18nProvider = ({ children }) => {
 };
 
 export const useI18n = () => useContext(I18nContext);
-
-

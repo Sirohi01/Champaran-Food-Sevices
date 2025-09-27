@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../i18n/i18n';
+import { login, loginUser, shouldRedirectToDashboard, getUserRole, getRoleDisplayName } from '../services/coreServices';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -8,17 +9,57 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const redirectPath = shouldRedirectToDashboard();
+    if (redirectPath) {
+      navigate(redirectPath, { replace: true });
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
+    setSuccess('');
     
-    // Simulate API call
-    setTimeout(() => {
-      localStorage.setItem('auth', 'true');
-      navigate('/dashboard', { replace: true });
+    try {
+      // Call login API using your pattern
+      const response = await login(email, password);
+      
+      if (response && response.data && response.data.data) {
+        // Login successful - extract from nested data structure
+        const { token, ...userData } = response.data.data;
+        
+        // Store user data and token
+        loginUser(userData, token);
+        
+        console.log('Login successful, user data:', userData);
+        console.log('User role:', userData.role);
+        console.log('Token:', token);
+        
+        setSuccess(`Welcome back, ${userData.name}! Redirecting to your ${getRoleDisplayName(userData.role)} dashboard...`);
+        
+        // Redirect to appropriate dashboard based on role
+        setTimeout(() => {
+          const redirectPath = shouldRedirectToDashboard();
+          console.log('Redirect path:', redirectPath);
+          navigate(redirectPath || '/dashboard', { replace: true });
+        }, 1500);
+        
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      // Error message is already shown by the login function via antd message
+      setError(error.message || 'Login failed. Please check your credentials.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -78,6 +119,29 @@ const Login = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-green-600 bg-clip-text text-transparent mb-2">Welcome Back!</h1>
             <p className="text-gray-600">Sign in to <span className="font-semibold text-orange-600">champaaran foods</span> wholesale dashboard</p>
           </div>
+
+          {/* Error/Success Messages */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            </div>
+          )}
+          
+          {success && (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-green-700 text-sm">{success}</p>
+              </div>
+            </div>
+          )}
 
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6 relative z-10">
@@ -171,9 +235,21 @@ const Login = () => {
 
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-orange-50 rounded-xl border border-orange-200">
-            <p className="text-sm text-orange-700 font-medium mb-2">Demo Credentials:</p>
-            <p className="text-xs text-orange-600">Email: admin@champaaranfoods.com</p>
-            <p className="text-xs text-orange-600">Password: admin123</p>
+            <p className="text-sm text-orange-700 font-medium mb-3">Demo Credentials:</p>
+            <div className="space-y-2 text-xs">
+              <div className="bg-white/50 p-2 rounded">
+                <p className="text-orange-600 font-medium">Super Admin:</p>
+                <p className="text-orange-600">superadmin@champaaranfoods.com / admin123</p>
+              </div>
+              <div className="bg-white/50 p-2 rounded">
+                <p className="text-orange-600 font-medium">Admin:</p>
+                <p className="text-orange-600">admin@champaaranfoods.com / admin123</p>
+              </div>
+              <div className="bg-white/50 p-2 rounded">
+                <p className="text-orange-600 font-medium">Manager:</p>
+                <p className="text-orange-600">ajay.sharma@manager.rd.com / admin123</p>
+              </div>
+            </div>
           </div>
 
           {/* Footer */}

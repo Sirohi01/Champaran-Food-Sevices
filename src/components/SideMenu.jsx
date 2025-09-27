@@ -2,10 +2,12 @@ import { NavLink } from 'react-router-dom';
 import SpriteIcons from './SpriteIcons';
 import { useI18n, Languages } from '../i18n/i18n';
 import { useTheme } from '../contexts/ThemeContext';
+import { getUserRole, USER_ROLES } from '../services/coreServices';
 
 const SideMenu = ({ mobile = false }) => {
   const { t, lang, setLang } = useI18n();
   const { isDark } = useTheme();
+  const userRole = getUserRole();
   
   const linkClass = ({ isActive }) =>
     `flex items-center px-4 py-3 rounded-xl transition-all duration-200 ${
@@ -13,12 +15,52 @@ const SideMenu = ({ mobile = false }) => {
         ? 'bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 text-white shadow-lg transform scale-105' 
         : 'text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-800 hover:text-blue-700 dark:hover:text-orange-400 hover:scale-105'
     }`;
-  const menuItems = [
-    { to: '/dashboard', icon: 'dashboard', label: t('dashboard.overview') },
-    { to: '/orders', icon: 'orders', label: t('dashboard.orders') },
-    { to: '/inventory', icon: 'inventory', label: t('dashboard.inventory') },
-    { to: '/settings', icon: 'settings', label: t('dashboard.settings') }
-  ];
+
+  // Role-based menu items
+  const getMenuItems = () => {
+    const baseItems = [
+      { to: '/dashboard', icon: 'dashboard', label: 'Dashboard' }
+    ];
+
+    if (userRole === USER_ROLES.SUPER_ADMIN) {
+      return [
+        ...baseItems,
+        { to: '/dashboard/create-user', icon: 'users', label: 'Create User' },
+        { to: '/dashboard/create-store', icon: 'store', label: 'Create Store' },
+        { to: '/dashboard/manage-users', icon: 'users', label: 'Manage Users' },
+        { to: '/dashboard/manage-stores', icon: 'store', label: 'Manage Stores' },
+        { to: '/dashboard/system-settings', icon: 'settings', label: 'System Settings' }
+      ];
+    }
+
+    if (userRole === USER_ROLES.ADMIN) {
+      return [
+        ...baseItems,
+        { to: '/dashboard/store-management', icon: 'store', label: 'Store Management' },
+        { to: '/dashboard/staff-management', icon: 'users', label: 'Staff Management' },
+        { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
+        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
+      ];
+    }
+
+    if (userRole === USER_ROLES.MANAGER) {
+      return [
+        ...baseItems,
+        { to: '/dashboard/operations', icon: 'operations', label: 'Operations' },
+        { to: '/dashboard/reports', icon: 'reports', label: 'Reports' },
+        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
+      ];
+    }
+
+    // Default menu for other roles
+    return [
+      ...baseItems,
+      { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
+      { to: '/dashboard/profile', icon: 'profile', label: 'Profile' }
+    ];
+  };
+
+  const menuItems = getMenuItems();
 
   return (
     <aside className={`w-64 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-r border-blue-200 dark:border-gray-700 transition-all duration-300 ${mobile ? '' : 'hidden md:block'}`}>

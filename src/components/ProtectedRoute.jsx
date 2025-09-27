@@ -1,14 +1,19 @@
 import { Navigate, Outlet } from 'react-router-dom';
-
-// Simple placeholder auth. Replace with real auth logic later.
-const useAuth = () => {
-  const stored = typeof window !== 'undefined' ? localStorage.getItem('auth') : null;
-  return { isAuthenticated: stored === 'true' };
-};
+import { isAuthenticated, isSessionExpired, logoutUser } from '../services/coreServices';
 
 const ProtectedRoute = () => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  // Check if user is authenticated and session is not expired
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  // Check if session has expired
+  if (isSessionExpired()) {
+    logoutUser();
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

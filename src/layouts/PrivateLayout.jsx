@@ -4,6 +4,7 @@ import DashboardHeader from '../components/DashboardHeader';
 import SideMenu from '../components/SideMenu';
 import { useI18n } from '../i18n/i18n';
 import { useTheme } from '../contexts/ThemeContext';
+import { logoutUser } from '../services/coreServices';
 
 const PrivateLayout = () => {
   const navigate = useNavigate();
@@ -12,8 +13,7 @@ const PrivateLayout = () => {
   const { isDark } = useTheme();
 
   const handleLogout = () => {
-    localStorage.removeItem('auth');
-    navigate('/login', { replace: true });
+    logoutUser();
   };
 
   return (
