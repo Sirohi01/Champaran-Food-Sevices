@@ -89,20 +89,23 @@ const StoresPage = () => {
     };
 
     // Handle store details view
-    const handleViewStore = async (storeId) => {
-        try {
-            setLoading(true);
-            const storeDetails = await getStoreById(storeId);
-            setSelectedStore(storeDetails);
-            setShowStoreDetails(true);
-        } catch (error) {
-            setError('Failed to fetch store details');
-            console.error('Error fetching store details:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const handleViewStore = async (storeId) => {
+    //     try {
+    //         setLoading(true);
+    //         const storeDetails = await getStoreById(storeId);
+    //         setSelectedStore(storeDetails);
+    //         setShowStoreDetails(true);
+    //     } catch (error) {
+    //         setError('Failed to fetch store details');
+    //         console.error('Error fetching store details:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
+    const handleViewStore = () => {
+            navigate('/dashboard/admin');
+        };
     // Handle edit store
     const handleEditStore = (store) => {
         setEditFormData({
