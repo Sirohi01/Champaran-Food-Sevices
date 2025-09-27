@@ -53,6 +53,7 @@ const AboutPage = () => {
   );
 };
 
+//cgecke fk
 export default AboutPage;
 
 

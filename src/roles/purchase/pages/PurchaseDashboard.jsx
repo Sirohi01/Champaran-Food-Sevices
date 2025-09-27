@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import SpriteIcons from '../../components/SpriteIcons';
-import { useI18n } from '../../i18n/i18n';
-import { useTheme } from '../../contexts/ThemeContext';
-import { getUserData } from '../../services/coreServices';
+import SpriteIcons from '../../../components/SpriteIcons';
+import { useI18n } from '../../../i18n/i18n';
+import { useTheme } from '../../../contexts/ThemeContext';
+import { getUserData } from '../../../services/coreServices';
 
-const SuperAdminDashboard = () => {
+const PurchaseDashboard= () => {
   const { t } = useI18n();
   const { isDark } = useTheme();
   const [stats, setStats] = useState({
@@ -116,7 +116,7 @@ const SuperAdminDashboard = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-orange-400 dark:to-red-500 bg-clip-text text-transparent">
-            {t('dashboard.superAdminTitle')}
+            {t('dashboard.PurchaseTitle')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
             {t('dashboard.welcomeMessage', { name: userData?.name })}
@@ -272,4 +272,4 @@ const SuperAdminDashboard = () => {
   );
 };
 
-export default SuperAdminDashboard;
+export default PurchaseDashboard;
