@@ -18,12 +18,12 @@ const PurchaseDashboard = lazy(() => import('../pages/dashboards/PurchaseDashboa
 const UserDashboard = lazy(() => import('../pages/dashboards/UserDashboard'));
 const CreateUser = lazy(() => import('../pages/CreateUser'));
 const CreateStore = lazy(() => import('../pages/CreateStore'));
+const StoresPage = lazy(() => import('../pages/StoresPage'));
 const CategoriesPage = lazy(() => import('../pages/CategoriesPage'));
 const OffersPage = lazy(() => import('../pages/OffersPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ContactPage = lazy(() => import('../pages/ContactPage'));
 
-// Component to handle role-based redirection
 const RoleBasedRedirect = () => {
   useEffect(() => {
     if (isAuthenticated()) {
@@ -63,8 +63,26 @@ const AllRoutes = () => {
               <Route path="salesman" element={<SalesmanDashboard />} />
               <Route path="purchase" element={<PurchaseDashboard />} />
               <Route path="user" element={<UserDashboard />} />
+              
+              {/* User Management Routes */}
+              <Route path="user-management" element={<CreateUser />} />
               <Route path="create-user" element={<CreateUser />} />
+              
+              {/* Store Management Routes */}
+              <Route path="store-management" element={<StoresPage />} />
+              <Route path="stores" element={<StoresPage />} />
               <Route path="create-store" element={<CreateStore />} />
+              
+              {/* Staff Management Routes */}
+              <Route path="staff-management" element={<CreateUser />} />
+              
+              {/* Other Routes - You can create these components later */}
+              <Route path="orders" element={<div className="p-6"><h1 className="text-2xl font-bold">Orders Page</h1><p>Coming Soon...</p></div>} />
+              <Route path="purchases" element={<div className="p-6"><h1 className="text-2xl font-bold">Purchases Page</h1><p>Coming Soon...</p></div>} />
+              <Route path="inventory" element={<div className="p-6"><h1 className="text-2xl font-bold">Inventory Page</h1><p>Coming Soon...</p></div>} />
+              <Route path="operations" element={<div className="p-6"><h1 className="text-2xl font-bold">Operations Page</h1><p>Coming Soon...</p></div>} />
+              <Route path="reports" element={<div className="p-6"><h1 className="text-2xl font-bold">Reports Page</h1><p>Coming Soon...</p></div>} />
+              <Route path="profile" element={<div className="p-6"><h1 className="text-2xl font-bold">Profile Page</h1><p>Coming Soon...</p></div>} />
             </Route>
             
             {/* Catch-all route for any unknown dashboard paths */}
@@ -79,5 +97,3 @@ const AllRoutes = () => {
 };
 
 export default AllRoutes;
-
-

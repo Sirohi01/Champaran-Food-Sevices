@@ -1,12 +1,10 @@
 import { NavLink } from 'react-router-dom';
 import SpriteIcons from './SpriteIcons';
 import { useI18n, Languages } from '../i18n/i18n';
-import { useTheme } from '../contexts/ThemeContext';
 import { getUserRole, USER_ROLES } from '../services/coreServices';
 
 const SideMenu = ({ mobile = false }) => {
   const { t, lang, setLang } = useI18n();
-  const { isDark } = useTheme();
   const userRole = getUserRole();
   
   const linkClass = ({ isActive }) =>
@@ -16,7 +14,6 @@ const SideMenu = ({ mobile = false }) => {
         : 'text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-800 hover:text-blue-700 dark:hover:text-orange-400 hover:scale-105'
     }`;
 
-  // Role-based menu items
   const getMenuItems = () => {
     const baseItems = [
       { to: '/dashboard', icon: 'dashboard', label: 'Dashboard' }
@@ -25,18 +22,18 @@ const SideMenu = ({ mobile = false }) => {
     if (userRole === USER_ROLES.SUPER_ADMIN) {
       return [
         ...baseItems,
-        { to: '/dashboard/create-user', icon: 'users', label: 'Create User' },
-        { to: '/dashboard/create-store', icon: 'store', label: 'Create Store' },
-        { to: '/dashboard/manage-users', icon: 'users', label: 'Manage Users' },
-        { to: '/dashboard/manage-stores', icon: 'store', label: 'Manage Stores' },
-        { to: '/dashboard/system-settings', icon: 'settings', label: 'System Settings' }
+        { to: '/dashboard/user-management', icon: 'users', label: 'User Management' },
+        { to: '/dashboard/stores', icon: 'store', label: 'All Stores' },
+        { to: '/dashboard/reports', icon: 'reports', label: 'Reports' },
+        { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
+        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
       ];
     }
 
     if (userRole === USER_ROLES.ADMIN) {
       return [
         ...baseItems,
-        { to: '/dashboard/store-management', icon: 'store', label: 'Store Management' },
+        { to: '/dashboard/stores', icon: 'store', label: 'All Stores' },
         { to: '/dashboard/staff-management', icon: 'users', label: 'Staff Management' },
         { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
         { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
@@ -52,7 +49,25 @@ const SideMenu = ({ mobile = false }) => {
       ];
     }
 
-    // Default menu for other roles
+    if (userRole === USER_ROLES.SALES_MAN) {
+      return [
+        ...baseItems,
+        { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
+        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' },
+        { to: '/dashboard/profile', icon: 'profile', label: 'Profile' }
+      ];
+    }
+
+    if (userRole === USER_ROLES.PURCHASE_MAN) {
+      return [
+        ...baseItems,
+        { to: '/dashboard/purchases', icon: 'orders', label: 'Purchases' },
+        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' },
+        { to: '/dashboard/profile', icon: 'profile', label: 'Profile' }
+      ];
+    }
+
+    // Default for USER role
     return [
       ...baseItems,
       { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
@@ -90,5 +105,3 @@ const SideMenu = ({ mobile = false }) => {
 };
 
 export default SideMenu;
-
-

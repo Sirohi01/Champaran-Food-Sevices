@@ -128,6 +128,46 @@ export const login = async (emailId, password) => {
   }
 };
 
+export const createStore = async (storeData) => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/store/create-store",
+      method: "POST", 
+      body: storeData
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(error.response?.data?.message || "Failed to create store");
+    throw error;
+  }
+};
+
+export const getStores = async () => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/store/all-store",
+      method: "GET"
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(error.response?.data?.message || "Failed to fetch stores");
+    throw error;
+  }
+};
+
+export const getUsers = async () => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/user/users",
+      method: "GET"
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(error.response?.data?.message || "Failed to fetch stores");
+    throw error;
+  }
+};
+
 // Login/Logout Functions
 export const loginUser = (userData, token) => {
   setAuthToken(token);

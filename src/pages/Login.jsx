@@ -11,8 +11,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
-  // Check if user is already logged in
   useEffect(() => {
     const redirectPath = shouldRedirectToDashboard();
     if (redirectPath) {
@@ -27,14 +25,10 @@ const Login = () => {
     setSuccess('');
     
     try {
-      // Call login API using your pattern
       const response = await login(email, password);
       
       if (response && response.data && response.data.data) {
-        // Login successful - extract from nested data structure
         const { token, ...userData } = response.data.data;
-        
-        // Store user data and token
         loginUser(userData, token);
         
         console.log('Login successful, user data:', userData);
@@ -42,8 +36,6 @@ const Login = () => {
         console.log('Token:', token);
         
         setSuccess(`Welcome back, ${userData.name}! Redirecting to your ${getRoleDisplayName(userData.role)} dashboard...`);
-        
-        // Redirect to appropriate dashboard based on role
         setTimeout(() => {
           const redirectPath = shouldRedirectToDashboard();
           console.log('Redirect path:', redirectPath);
@@ -232,35 +224,15 @@ const Login = () => {
               )}
             </button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-orange-50 rounded-xl border border-orange-200">
-            <p className="text-sm text-orange-700 font-medium mb-3">Demo Credentials:</p>
-            <div className="space-y-2 text-xs">
-              <div className="bg-white/50 p-2 rounded">
-                <p className="text-orange-600 font-medium">Super Admin:</p>
-                <p className="text-orange-600">superadmin@champaaranfoods.com / admin123</p>
-              </div>
-              <div className="bg-white/50 p-2 rounded">
-                <p className="text-orange-600 font-medium">Admin:</p>
-                <p className="text-orange-600">admin@champaaranfoods.com / admin123</p>
-              </div>
-              <div className="bg-white/50 p-2 rounded">
-                <p className="text-orange-600 font-medium">Manager:</p>
-                <p className="text-orange-600">ajay.sharma@manager.rd.com / admin123</p>
-              </div>
-            </div>
-          </div>
-
           {/* Footer */}
-          <div className="mt-8 text-center">
+          {/* <div className="mt-8 text-center">
             <p className="text-sm text-gray-500">
               Don't have an account?{' '}
               <button className="text-orange-600 hover:text-orange-500 font-medium">
                 Contact Admin
               </button>
             </p>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom Text */}

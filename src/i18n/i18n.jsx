@@ -31,6 +31,9 @@ const translations = {
       
       // Super Admin Dashboard specific keys
       superAdminTitle: 'Super Admin Dashboard',
+      AdminTitle: 'Admin Dashboard',
+      PurchaseTitle: 'Purchase Dashboard',
+      SalesmanTitle: 'Salesman Dashboard',
       welcomeMessage: 'Welcome back, {{name}}! Here\'s your system overview.',
       totalUsers: 'Total Users',
       totalStores: 'Total Stores',
@@ -47,10 +50,7 @@ const translations = {
       alerts: {
         serverMaintenance: 'Server maintenance scheduled for Sunday 2 AM',
         newFeature: 'New feature: Inventory tracking is now live',
-        syncIssue: 'Store #3 reporting sync issues'
-      },
-      
-      priority: {
+        syncIssue: 'Store #3 reporting sync issues',
         high: 'HIGH PRIORITY',
         medium: 'MEDIUM PRIORITY',
         low: 'LOW PRIORITY'
@@ -58,32 +58,32 @@ const translations = {
     },
     userManagement: {
       title: 'User Management',
+      addUser: 'Add User',
       createUser: 'Create New User',
+      editUser: 'Edit User',
       fullName: 'Full Name',
-      email: 'Email Address',
-      phone: 'Phone Number',
+      email: 'Email',
       role: 'Role',
-      store: 'Store',
+      roles: {
+        admin: 'Admin',
+        manager: 'Manager',
+        salesPerson: 'Sales Person',
+        purchaseManager: 'Purchase Manager',
+        user: 'User',
+        super_admin: 'Super Admin'
+      },
       password: 'Password',
       confirmPassword: 'Confirm Password',
-      selectRole: 'Select Role',
-      selectStore: 'Select Store',
-      admin: 'Admin',
-      manager: 'Manager',
-      salesPerson: 'Sales Person',
-      purchaseManager: 'Purchase Manager',
-      user: 'User',
-      super_admin: 'Super Admin',
-      create: 'Create User',
-      cancel: 'Cancel',
-      backToDashboard: 'Back to Dashboard',
-      userCreated: 'User created successfully!',
-      validation: {
-        required: 'This field is required',
-        emailInvalid: 'Please enter a valid email',
-        passwordMismatch: 'Passwords do not match',
-        passwordLength: 'Password must be at least 6 characters'
-      }
+      actions: 'Actions',
+      createSuccess: 'User created successfully!',
+      updateSuccess: 'User updated successfully!',
+      deleteSuccess: 'User deleted successfully!',
+      fetchError: 'Error fetching users',
+      passwordsDontMatch: 'Passwords do not match',
+      errorOccurred: 'An error occurred',
+      confirmDelete: 'Are you sure you want to delete this user?',
+      deleteError: 'Error deleting user',
+      noUsersFound: 'No users found'
     },
     storeManagement: {
       title: 'Store Management',
@@ -253,6 +253,9 @@ const translations = {
   },
   hi: {
     dashboard: {
+      AdminTitle: "एडमिन डैशबोर्ड",
+      PurchaseTitle: "परचेज डैशबोर्ड",
+      SalesmanTitle: "सेल्समैन डैशबोर्ड",
       overview: 'डैशबोर्ड',
       recentOrders: 'हाल के आदेश',
       lowInventory: 'कम इन्वेंटरी',
@@ -324,6 +327,35 @@ const translations = {
         passwordMismatch: 'पासवर्ड मेल नहीं खाते',
         passwordLength: 'पासवर्ड कम से कम 6 वर्णों का होना चाहिए'
       }
+    },
+    userManagement: {
+      title: 'User Management',
+      addUser: 'Add User',
+      createUser: 'Create New User',
+      editUser: 'Edit User',
+      fullName: 'Full Name',
+      email: 'Email',
+      role: 'Role',
+      roles: {
+        admin: 'Admin',
+        manager: 'Manager',
+        salesPerson: 'Sales Person',
+        purchaseManager: 'Purchase Manager',
+        user: 'User',
+        super_admin: 'Super Admin'
+      },
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      actions: 'Actions',
+      createSuccess: 'User created successfully!',
+      updateSuccess: 'User updated successfully!',
+      deleteSuccess: 'User deleted successfully!',
+      fetchError: 'Error fetching users',
+      passwordsDontMatch: 'Passwords do not match',
+      errorOccurred: 'An error occurred',
+      confirmDelete: 'Are you sure you want to delete this user?',
+      deleteError: 'Error deleting user',
+      noUsersFound: 'No users found'
     },
     storeManagement: {
       title: 'स्टोर प्रबंधन',
@@ -493,6 +525,9 @@ const translations = {
   },
   bn: {
     dashboard: {
+      AdminTitle: "অ্যাডমিন ড্যাশবোর্ড",
+      PurchaseTitle: "পারচেজ ড্যাশবোর্ড",
+      SalesmanTitle: "সেলসম্যান ড্যাশবোর্ড",
       overview: 'ড্যাশবোর্ড',
       recentOrders: 'সাম্প্রতিক অর্ডার',
       lowInventory: 'কম ইনভেন্টরি',
@@ -564,6 +599,35 @@ const translations = {
         passwordMismatch: 'পাসওয়ার্ড মেলে নি',
         passwordLength: 'পাসওয়ার্ড কমপক্ষে 6 অক্ষরের হতে হবে'
       }
+    },
+    userManagement: {
+      title: 'User Management',
+      addUser: 'Add User',
+      createUser: 'Create New User',
+      editUser: 'Edit User',
+      fullName: 'Full Name',
+      email: 'Email',
+      role: 'Role',
+      roles: {
+        admin: 'Admin',
+        manager: 'Manager',
+        salesPerson: 'Sales Person',
+        purchaseManager: 'Purchase Manager',
+        user: 'User',
+        super_admin: 'Super Admin'
+      },
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      actions: 'Actions',
+      createSuccess: 'User created successfully!',
+      updateSuccess: 'User updated successfully!',
+      deleteSuccess: 'User deleted successfully!',
+      fetchError: 'Error fetching users',
+      passwordsDontMatch: 'Passwords do not match',
+      errorOccurred: 'An error occurred',
+      confirmDelete: 'Are you sure you want to delete this user?',
+      deleteError: 'Error deleting user',
+      noUsersFound: 'No users found'
     },
     storeManagement: {
       title: 'স্টোর ব্যবস্থাপনা',
@@ -677,6 +741,9 @@ const translations = {
       overview: 'ડેશબોર્ડ',
       recentOrders: 'તાજેતરના ઓર્ડર',
       lowInventory: 'ઓછી ઇન્વેન્ટરી',
+      AdminTitle: "એડમિન ડેશબોર્ડ",
+      PurchaseTitle: "પરચેઝ ડેશબોર્ડ",
+      SalesmanTitle: "સેલ્સમેન ડેશબોર્ડ",
       orders: 'ઓર્ડર',
       inventory: 'ઇન્વેન્ટરી',
       settings: 'સેટિંગ્સ',
@@ -745,6 +812,35 @@ const translations = {
         passwordMismatch: 'પાસવર્ડ મેળ ખાતા નથી',
         passwordLength: 'પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરનો હોવો જોઈએ'
       }
+    },
+    userManagement: {
+      title: 'User Management',
+      addUser: 'Add User',
+      createUser: 'Create New User',
+      editUser: 'Edit User',
+      fullName: 'Full Name',
+      email: 'Email',
+      role: 'Role',
+      roles: {
+        admin: 'Admin',
+        manager: 'Manager',
+        salesPerson: 'Sales Person',
+        purchaseManager: 'Purchase Manager',
+        user: 'User',
+        super_admin: 'Super Admin'
+      },
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      actions: 'Actions',
+      createSuccess: 'User created successfully!',
+      updateSuccess: 'User updated successfully!',
+      deleteSuccess: 'User deleted successfully!',
+      fetchError: 'Error fetching users',
+      passwordsDontMatch: 'Passwords do not match',
+      errorOccurred: 'An error occurred',
+      confirmDelete: 'Are you sure you want to delete this user?',
+      deleteError: 'Error deleting user',
+      noUsersFound: 'No users found'
     },
     storeManagement: {
       title: 'સ્ટોર વ્યવસ્થાપન',

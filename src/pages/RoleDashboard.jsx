@@ -60,21 +60,59 @@ const RoleDashboard = () => {
           return;
         }
 
-        // Get the current path and the path we should be on
+        // Get the current path
         const currentPath = location.pathname;
-        const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard';
         
-        // Only redirect if we're not already on a valid dashboard path
-        if (!currentPath.startsWith(roleDashboardPath)) {
+        // List of valid dashboard paths that shouldn't trigger redirect
+        const validDashboardPaths = [
+          '/dashboard/home',
+          '/dashboard/super-admin',
+          '/dashboard/admin', 
+          '/dashboard/manager',
+          '/dashboard/salesman',
+          '/dashboard/purchase',
+          '/dashboard/user',
+          '/dashboard/user-management',
+          '/dashboard/create-user',
+          '/dashboard/store-management',
+          '/dashboard/create-store',
+          '/dashboard/staff-management',
+          '/dashboard/orders',
+          '/dashboard/purchases',
+          '/dashboard/inventory',
+          '/dashboard/operations',
+          '/dashboard/reports',
+          '/dashboard/profile'
+        ];
+
+        // Check if current path is a valid dashboard path
+        const isValidDashboardPath = validDashboardPaths.some(path => 
+          currentPath.startsWith(path)
+        );
+
+        // Only redirect if we're on the exact /dashboard path (not a sub-path)
+        if (currentPath === '/dashboard') {
+          const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/home';
           if (isDevelopment()) {
-            console.log(`Redirecting to role-specific dashboard: ${roleDashboardPath}`);
+            console.log(`Redirecting from /dashboard to role-specific dashboard: ${roleDashboardPath}`);
           }
           navigate(roleDashboardPath, { replace: true });
           return;
         }
+
+        // If we're on a valid dashboard path or any dashboard sub-path, don't redirect
+        if (currentPath.startsWith('/dashboard')) {
+          setLoading(false);
+          return;
+        }
         
-        // If we get here, we're on the correct dashboard
-        setLoading(false);
+        // If we get here and we're not on a dashboard path, redirect to role dashboard
+        const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/home';
+        if (isDevelopment()) {
+          console.log(`Redirecting to role-specific dashboard: ${roleDashboardPath}`);
+        }
+        navigate(roleDashboardPath, { replace: true });
+        
       } catch (err) {
         console.error('Error in RoleDashboard:', err);
         setError('An error occurred while loading the dashboard');
