@@ -155,6 +155,33 @@ export const getStores = async () => {
   }
 };
 
+export const getStoreById = async (storeId) => {
+  try {
+    const response = await callApi({
+      endpoint: `api/v1/store/get/${storeId}`,
+      method: "GET"
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(error.response?.data?.message || "Failed to fetch store");
+    throw error;
+  }
+};
+
+export const updateStore = async (storeId, storeData) => {
+  try {
+    const response = await callApi({
+      endpoint: `api/v1/store/update/${storeId}`,
+      method: "PATCH",
+      body: storeData
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(error.response?.data?.message || "Failed to update store");
+    throw error;
+  }
+};
+
 export const getUsers = async () => {
   try {
     const response = await callApi({

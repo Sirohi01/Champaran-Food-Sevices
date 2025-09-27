@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import SpriteIcons from '../../components/SpriteIcons';
-import { useI18n } from '../../i18n/i18n';
-import { useTheme } from '../../contexts/ThemeContext';
-import { getUserData } from '../../services/coreServices';
+import { useNavigate } from 'react-router-dom';
+import SpriteIcons from '../../../components/SpriteIcons';
+import { useI18n } from '../../../i18n/i18n';
+import { useTheme } from '../../../contexts/ThemeContext';
+import { getUserData } from '../../../services/coreServices';
 
-const PurchaseDashboard= () => {
+const SuperAdminDashboard = () => {
   const { t } = useI18n();
   const { isDark } = useTheme();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalStores: 0,
@@ -116,7 +118,7 @@ const PurchaseDashboard= () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-orange-400 dark:to-red-500 bg-clip-text text-transparent">
-            {t('dashboard.PurchaseTitle')}
+            {t('dashboard.superAdminTitle')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
             {t('dashboard.welcomeMessage', { name: userData?.name })}
@@ -250,11 +252,17 @@ const PurchaseDashboard= () => {
           {t('dashboard.quickActions')}
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors flex flex-col items-center">
+          <button 
+            onClick={() => navigate('/dashboard/user-management')}
+            className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors flex flex-col items-center"
+          >
             <SpriteIcons name="user-plus" className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-2" />
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{t('dashboard.manageUsers')}</span>
           </button>
-          <button className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors flex flex-col items-center">
+          <button 
+            onClick={() => navigate('/dashboard/store-management')}
+            className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors flex flex-col items-center"
+          >
             <SpriteIcons name="store" className="w-8 h-8 text-green-600 dark:text-green-400 mb-2" />
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{t('dashboard.manageStores')}</span>
           </button>
@@ -272,4 +280,4 @@ const PurchaseDashboard= () => {
   );
 };
 
-export default PurchaseDashboard;
+export default SuperAdminDashboard;

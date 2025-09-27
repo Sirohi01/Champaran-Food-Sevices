@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserRole, USER_ROLES, getStores } from '../services/coreServices';
+import { getUserRole, USER_ROLES, getStores, getStoreById, updateStore } from '../services/coreServices';
 
 const StoresPage = () => {
     const navigate = useNavigate();
@@ -10,6 +10,11 @@ const StoresPage = () => {
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredStores, setFilteredStores] = useState([]);
+    const [selectedStore, setSelectedStore] = useState(null);
+    const [showStoreDetails, setShowStoreDetails] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editFormData, setEditFormData] = useState({});
+    const [updating, setUpdating] = useState(false);
 
     const canViewStores = [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN].includes(userRole);
 
@@ -78,6 +83,77 @@ const StoresPage = () => {
             month: 'short',
             year: 'numeric'
         });
+    };
+
+    // Handle store details view
+    const handleViewStore = async (storeId) => {
+        try {
+            setLoading(true);
+            const storeDetails = await getStoreById(storeId);
+            setSelectedStore(storeDetails);
+            setShowStoreDetails(true);
+        } catch (error) {
+            setError('Failed to fetch store details');
+            console.error('Error fetching store details:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Handle edit store
+    const handleEditStore = (store) => {
+        setEditFormData({
+            _id: store._id,
+            name: store.name,
+            email: store.email,
+            phone: store.phone,
+            address: {
+                street: store.address.street,
+                city: store.address.city,
+                state: store.address.state,
+                zipCode: store.address.zipCode
+            },
+            isActive: store.isActive
+        });
+        setShowEditModal(true);
+    };
+
+    // Handle update store
+    const handleUpdateStore = async (e) => {
+        e.preventDefault();
+        try {
+            setUpdating(true);
+            const response = await updateStore(editFormData._id, editFormData);
+            console.log('Store updated:', response);
+            
+            // Refresh stores list
+            await fetchStores();
+            setShowEditModal(false);
+            setEditFormData({});
+        } catch (error) {
+            setError('Failed to update store');
+            console.error('Error updating store:', error);
+        } finally {
+            setUpdating(false);
+        }
+    };
+
+    // Handle toggle store status
+    const handleToggleStoreStatus = async (storeId, currentStatus) => {
+        try {
+            setUpdating(true);
+            const updatedData = { isActive: !currentStatus };
+            const response = await updateStore(storeId, updatedData);
+            console.log('Store status updated:', response);
+            
+            // Refresh stores list
+            await fetchStores();
+        } catch (error) {
+            setError('Failed to update store status');
+            console.error('Error updating store status:', error);
+        } finally {
+            setUpdating(false);
+        }
     };
 
     if (!canViewStores) {
@@ -299,6 +375,38 @@ const StoresPage = () => {
                                             Created: {formatDate(store.createdAt)}
                                         </span>
                                         
+                                        {/* Action Buttons */}
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleViewStore(store._id)}
+                                                className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                                            >
+                                                View
+                                            </button>
+                                            
+                                            {userRole === USER_ROLES.SUPER_ADMIN && (
+                                                <>
+                                                    <button
+                                                        onClick={() => handleEditStore(store)}
+                                                        className="px-3 py-1 text-xs bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    
+                                                    <button
+                                                        onClick={() => handleToggleStoreStatus(store._id, store.isActive)}
+                                                        disabled={updating}
+                                                        className={`px-3 py-1 text-xs rounded-lg transition-colors ${
+                                                            store.isActive 
+                                                                ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800' 
+                                                                : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
+                                                        } ${updating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                    >
+                                                        {updating ? '...' : (store.isActive ? 'Deactivate' : 'Activate')}
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -306,6 +414,296 @@ const StoresPage = () => {
                     </>
                 )}
             </div>
+
+            {/* Store Details Modal */}
+            {showStoreDetails && selectedStore && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="p-6">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                                    Store Details
+                                </h2>
+                                <button
+                                    onClick={() => setShowStoreDetails(false)}
+                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                {/* Store Header */}
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                                        {selectedStore.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                                            {selectedStore.name}
+                                        </h3>
+                                        <div className="flex items-center mt-1">
+                                            <div className={`w-3 h-3 rounded-full mr-2 ${selectedStore.isActive ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                                            <span className={`text-sm font-medium ${selectedStore.isActive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                {selectedStore.isActive ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Store Information */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Contact Information</h4>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center">
+                                                <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.email}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                </svg>
+                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.phone}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Address</h4>
+                                        <div className="flex items-start">
+                                            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            </svg>
+                                            <div className="text-gray-600 dark:text-gray-400">
+                                                <p>{selectedStore.address.street}</p>
+                                                <p>{selectedStore.address.city}, {selectedStore.address.state}</p>
+                                                <p>{selectedStore.address.zipCode}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Store Stats */}
+                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Store Information</h4>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">Created</p>
+                                            <p className="font-semibold text-gray-800 dark:text-gray-200">{formatDate(selectedStore.createdAt)}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
+                                            <p className={`font-semibold ${selectedStore.isActive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                {selectedStore.isActive ? 'Active' : 'Inactive'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+                                {userRole === USER_ROLES.SUPER_ADMIN && (
+                                    <>
+                                        <button
+                                            onClick={() => {
+                                                setShowStoreDetails(false);
+                                                handleEditStore(selectedStore);
+                                            }}
+                                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                        >
+                                            Edit Store
+                                        </button>
+                                        <button
+                                            onClick={() => handleToggleStoreStatus(selectedStore._id, selectedStore.isActive)}
+                                            className={`px-4 py-2 rounded-lg transition-colors ${
+                                                selectedStore.isActive 
+                                                    ? 'bg-red-600 hover:bg-red-700 text-white' 
+                                                    : 'bg-green-600 hover:bg-green-700 text-white'
+                                            }`}
+                                        >
+                                            {selectedStore.isActive ? 'Deactivate' : 'Activate'}
+                                        </button>
+                                    </>
+                                )}
+                                <button
+                                    onClick={() => setShowStoreDetails(false)}
+                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Store Modal */}
+            {showEditModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="p-6">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                                    Edit Store
+                                </h2>
+                                <button
+                                    onClick={() => setShowEditModal(false)}
+                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleUpdateStore} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Store Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={editFormData.name || ''}
+                                            onChange={(e) => setEditFormData({...editFormData, name: e.target.value})}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            value={editFormData.email || ''}
+                                            onChange={(e) => setEditFormData({...editFormData, email: e.target.value})}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Phone
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            value={editFormData.phone || ''}
+                                            onChange={(e) => setEditFormData({...editFormData, phone: e.target.value})}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Status
+                                        </label>
+                                        <select
+                                            value={editFormData.isActive ? 'active' : 'inactive'}
+                                            onChange={(e) => setEditFormData({...editFormData, isActive: e.target.value === 'active'})}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                        >
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Street Address
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editFormData.address?.street || ''}
+                                        onChange={(e) => setEditFormData({
+                                            ...editFormData, 
+                                            address: {...editFormData.address, street: e.target.value}
+                                        })}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            City
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={editFormData.address?.city || ''}
+                                            onChange={(e) => setEditFormData({
+                                                ...editFormData, 
+                                                address: {...editFormData.address, city: e.target.value}
+                                            })}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            State
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={editFormData.address?.state || ''}
+                                            onChange={(e) => setEditFormData({
+                                                ...editFormData, 
+                                                address: {...editFormData.address, state: e.target.value}
+                                            })}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            ZIP Code
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={editFormData.address?.zipCode || ''}
+                                            onChange={(e) => setEditFormData({
+                                                ...editFormData, 
+                                                address: {...editFormData.address, zipCode: e.target.value}
+                                            })}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-600">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowEditModal(false)}
+                                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={updating}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {updating ? 'Updating...' : 'Update Store'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
