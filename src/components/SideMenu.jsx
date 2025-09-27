@@ -33,8 +33,8 @@ const SideMenu = ({ mobile = false }) => {
     if (userRole === USER_ROLES.ADMIN) {
       return [
         ...baseItems,
-        { to: '/dashboard/stores', icon: 'store', label: 'All Stores' },
-        { to: '/dashboard/staff-management', icon: 'users', label: 'Staff Management' },
+        //{ to: '/dashboard/stores', icon: 'store', label: 'All Stores' },
+        // { to: '/dashboard/staff-management', icon: 'users', label: 'Staff Management' },
         { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
         { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
       ];
