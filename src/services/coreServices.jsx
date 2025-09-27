@@ -135,13 +135,18 @@ export const createStore = async (storeData) => {
       method: "POST", 
       body: storeData
     });
-    return response.data;
+    
+    if (response && response.success) {
+      return response;
+    } else {
+      throw new Error(response.message || 'Failed to create store');
+    }
   } catch (error) {
-    showMessage.error(error.response?.data?.message || "Failed to create store");
-    throw error;
+    const errorMessage = error.response?.data?.message || error.message || "Failed to create store";
+    showMessage.error(errorMessage);
+    throw new Error(errorMessage);
   }
 };
-
 export const getStores = async () => {
   try {
     const response = await callApi({
