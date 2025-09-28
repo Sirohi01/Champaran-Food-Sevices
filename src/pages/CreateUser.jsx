@@ -113,7 +113,7 @@ const CreateUser = () => {
     { value: USER_ROLES.MANAGER, label: 'Manager' },
     { value: USER_ROLES.SALES_MAN, label: 'Sales Person' },
     { value: USER_ROLES.PURCHASE_MAN, label: 'Purchase Manager' },
-    { value: USER_ROLES.USER, label: 'User' }
+    // { value: USER_ROLES.USER, label: 'User' }
   ];
 
   return (
