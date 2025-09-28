@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import callApi from '../services/apiServices';
-import { USER_ROLES, getStores } from '../services/coreServices';
+import { USER_ROLES, getStores, getUserRole } from '../services/coreServices';
 
 const CreateUser = () => {
   const navigate = useNavigate();
+  const userRole = getUserRole();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,6 +19,29 @@ const CreateUser = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [stores, setStores] = useState([]);
+
+  // Role-based access: allow super_admin, admin, purchase_man, manager
+  const canCreateUser = [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN, USER_ROLES.MANAGER].includes(userRole);
+  if (!canCreateUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg text-center max-w-md w-full">
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+            Access Denied
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            Only Super Admins, Admins, Purchase Managers, and Managers can create users.
+          </p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Fetch stores when component mounts
   useEffect(() => {

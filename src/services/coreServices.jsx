@@ -4,7 +4,8 @@ import callApi from './apiServices';
 const showMessage = {
   error: (msg) => {
     console.error(msg);
-    alert(`Error: ${msg}`);
+    // TODO: Replace with a toast notification in production
+    // alert(`Error: ${msg}`); // Removed blocking alert
   },
   success: (msg) => {
     console.log(msg);
@@ -147,7 +148,7 @@ export const createVendor = async (vendorData) => {
 export const getPurchaseInwards = async () => {
   try {
     const response = await callApi({
-      endpoint: "api/v1/inwards/purchase",
+      endpoint: "api/v1/inwards/get-all-purchase-order",
       method: "GET",
     });
     return response.data;

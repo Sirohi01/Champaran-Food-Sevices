@@ -1,10 +1,14 @@
     import { useState, useEffect, useCallback } from 'react';
     import { useNavigate } from 'react-router-dom';
     import { getUserRole, USER_ROLES, getStores, createPurchaseInward, getVendors, getStoreById } from '../services/coreServices';
+    import { useAuth } from '../services/AuthContext.jsx';
 
     const CreatePurchaseInward = () => {
     const navigate = useNavigate();
-    const userRole = getUserRole();
+    const auth = useAuth();
+    console.log('DEBUG: AuthContext user role:', auth.role);
+    console.log('DEBUG: AuthContext storeId:', auth.storeId);
+    const userRole = auth.role;
     const [formData, setFormData] = useState({
         vendorId: '',
         storeId: '',
@@ -24,7 +28,7 @@
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const canCreatePurchase = [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN].includes(userRole);
+    const canCreatePurchase = [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN].includes(auth.role);
 
     const fetchVendorsAndStores = useCallback(async () => {
         try {
@@ -46,33 +50,44 @@
         setVendors(vendorsData);
 
         // For ADMIN users, fetch only their assigned store
-        if (userRole === USER_ROLES.ADMIN) {
-            // Get admin's store ID from localStorage or user data
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            const adminStoreId = userData.storeId;
-            
-            if (adminStoreId) {
-            try {
-                const storeResponse = await getStoreById(adminStoreId);
-                console.log('Store API Response:', storeResponse);
-                
-                if (storeResponse && storeResponse.success) {
-                const storeData = storeResponse.data?.data || storeResponse.data;
-                if (storeData) {
-                    setStores([storeData]);
-                    // Auto-select the admin's store
-                    setFormData(prev => ({
-                    ...prev,
-                    storeId: adminStoreId
-                    }));
+        if (auth.role === USER_ROLES.ADMIN) {
+            let adminStoreId = auth.storeId;
+            if (!adminStoreId) {
+                // Fallback: try to get from localStorage directly for debug
+                const userDataRaw = localStorage.getItem('user_data');
+                let userData = null;
+                try {
+                    userData = userDataRaw ? JSON.parse(userDataRaw) : null;
+                } catch (e) {
+                    userData = null;
                 }
-                }
-            } catch (error) {
-                console.error('Error fetching admin store:', error);
-                setError('Failed to load your store information');
-            }
+                adminStoreId = userData?.storeId;
+                console.log('DEBUG: Fallback localStorage user_data:', userData);
+                console.log('DEBUG: Fallback adminStoreId:', adminStoreId);
             } else {
-            setError('No store assigned to your account');
+                console.log('DEBUG: AuthContext adminStoreId:', adminStoreId);
+            }
+            if (adminStoreId) {
+                try {
+                    const storeResponse = await getStoreById(adminStoreId);
+                    console.log('Store API Response:', storeResponse);
+                    if (storeResponse && storeResponse.success) {
+                        const storeData = storeResponse.data?.data || storeResponse.data;
+                        if (storeData) {
+                            setStores([storeData]);
+                            console.log('DEBUG: storeData set in state:', storeData);
+                            setFormData(prev => ({
+                                ...prev,
+                                storeId: adminStoreId
+                            }));
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching admin store:', error);
+                    setError('Failed to load your store information');
+                }
+            } else {
+                setError('No store assigned to your account');
             }
         } else {
             // For SUPER_ADMIN and PURCHASE_MAN, fetch all stores
@@ -97,7 +112,17 @@
         } finally {
         setFetchLoading(false);
         }
-    }, [userRole]);
+    }, [auth.role, auth.storeId]);
+
+    // Set storeId in formData for admin on mount if available
+    useEffect(() => {
+        if (auth.role === USER_ROLES.ADMIN && auth.storeId) {
+            setFormData(prev => ({
+                ...prev,
+                storeId: auth.storeId
+            }));
+        }
+    }, [auth.role, auth.storeId]);
 
     useEffect(() => {
         if (canCreatePurchase) {
@@ -340,12 +365,12 @@
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                     Store *
                     </label>
-                    {userRole === USER_ROLES.ADMIN ? (
+                    {auth.role === USER_ROLES.ADMIN ? (
                     // For ADMIN - show selected store (read-only)
                     <div>
                         <input
                         type="text"
-                        value={stores[0]?.name || 'Loading...'}
+                        value={stores[0]?.storeName || stores[0]?.name || 'Loading...'}
                         readOnly
                         className="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 dark:border-gray-600 rounded-lg md:rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-not-allowed text-sm md:text-base"
                         />
