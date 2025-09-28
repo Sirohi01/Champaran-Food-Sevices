@@ -1,20 +1,12 @@
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Categories from './components/Categories';
-import Services from './components/Services';
-import Offers from './components/Offers';
-import Footer from './components/Footer';
+import AllRoutes from './routes/AllRoutes';
+import { AuthProvider } from './services/AuthContext.jsx';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <Hero />
-      <Categories />
-      <Services />
-      <Offers />
-      <Footer />
-    </div>
+    <AuthProvider>
+        <AllRoutes />
+    </AuthProvider>
   );
 }
 

@@ -1,11 +1,13 @@
 import { FruitIcon, VegetableIcon, MilkIcon, BreadIcon, CartIcon } from './Icons';
+import { useI18n } from '../i18n/i18n';
 
 const Categories = () => {
+  const { t } = useI18n();
   const categories = [
     {
       id: 1,
-      name: 'Rice & Grains',
-      description: 'Bulk Supply',
+      name: t('categories.riceGrains'),
+      description: t('categories.bulkSupply'),
       icon: () => (
         <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -18,8 +20,8 @@ const Categories = () => {
     },
     {
       id: 2,
-      name: 'Vegetables',
-      description: 'Fresh Wholesale',
+      name: t('categories.vegetables'),
+      description: t('categories.freshWholesale'),
       icon: VegetableIcon,
       gradient: 'from-green-400 to-emerald-500',
       bgGradient: 'from-green-50 to-emerald-50',
@@ -28,8 +30,8 @@ const Categories = () => {
     },
     {
       id: 3,
-      name: 'Cooking Oil',
-      description: 'Bulk Containers',
+      name: t('categories.cookingOil'),
+      description: t('categories.bulkContainers'),
       icon: () => (
         <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
           <path d="M5 2v6h.5c.8 0 1.5.7 1.5 1.5V20c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V9.5c0-.8.7-1.5 1.5-1.5H19V2H5zm7 18c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
@@ -42,8 +44,8 @@ const Categories = () => {
     },
     {
       id: 4,
-      name: 'Flour & Atta',
-      description: 'Wholesale Sacks',
+      name: t('categories.flourAtta'),
+      description: t('categories.wholesaleSacks'),
       icon: BreadIcon,
       gradient: 'from-amber-400 to-yellow-500',
       bgGradient: 'from-amber-50 to-yellow-50',
@@ -52,8 +54,8 @@ const Categories = () => {
     },
     {
       id: 5,
-      name: 'Spices & Masala',
-      description: 'Bulk Packets',
+      name: t('categories.spicesMasala'),
+      description: t('categories.bulkPackets'),
       icon: () => (
         <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -66,8 +68,8 @@ const Categories = () => {
     },
     {
       id: 6,
-      name: 'Pulses & Dal',
-      description: 'Bulk Supply',
+      name: t('categories.pulsesDal'),
+      description: t('categories.bulkSupply'),
       icon: () => (
         <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="3"/>
@@ -91,16 +93,13 @@ const Categories = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-100 text-orange-800 text-sm font-medium mb-4">
             <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-            Wholesale Categories
+            {t('categories.badge')}
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Bulk Supply{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-500">
-              Categories
-            </span>
+            {t('categories.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            हमारे पास हर तरह का wholesale सामान है। छोटे से बड़े grocery stores के लिए bulk quantity में supply।
+            {t('categories.subtitle')}
           </p>
         </div>
 
@@ -138,9 +137,9 @@ const Categories = () => {
         <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-3xl p-8">
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              Today's Fresh Picks
+              {t('categories.todaysFreshPicks')}
             </h3>
-            <p className="text-gray-600">आज के ताज़े और बेहतरीन प्रोडक्ट्स</p>
+            <p className="text-gray-600">{t('categories.todaysFreshPicksSubtitle')}</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -149,7 +148,7 @@ const Categories = () => {
               <div className="aspect-square bg-gradient-to-br from-red-100 to-pink-100 rounded-lg mb-3 flex items-center justify-center">
                 <span className="text-4xl">🍎</span>
               </div>
-              <h4 className="font-semibold text-gray-800 mb-1">Fresh Apples</h4>
+              <h4 className="font-semibold text-gray-800 mb-1">{t('categories.freshApples')}</h4>
               <p className="text-sm text-gray-600 mb-2">1 kg</p>
               <div className="flex items-center justify-between">
                 <span className="font-bold text-green-600">₹120</span>
@@ -163,7 +162,7 @@ const Categories = () => {
               <div className="aspect-square bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg mb-3 flex items-center justify-center">
                 <span className="text-4xl">🥕</span>
               </div>
-              <h4 className="font-semibold text-gray-800 mb-1">Carrots</h4>
+              <h4 className="font-semibold text-gray-800 mb-1">{t('categories.carrots')}</h4>
               <p className="text-sm text-gray-600 mb-2">500g</p>
               <div className="flex items-center justify-between">
                 <span className="font-bold text-green-600">₹40</span>
@@ -177,7 +176,7 @@ const Categories = () => {
               <div className="aspect-square bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg mb-3 flex items-center justify-center">
                 <span className="text-4xl">🥛</span>
               </div>
-              <h4 className="font-semibold text-gray-800 mb-1">Fresh Milk</h4>
+              <h4 className="font-semibold text-gray-800 mb-1">{t('categories.freshMilk')}</h4>
               <p className="text-sm text-gray-600 mb-2">1 Liter</p>
               <div className="flex items-center justify-between">
                 <span className="font-bold text-green-600">₹60</span>
@@ -191,7 +190,7 @@ const Categories = () => {
               <div className="aspect-square bg-gradient-to-br from-yellow-100 to-orange-100 rounded-lg mb-3 flex items-center justify-center">
                 <span className="text-4xl">🍞</span>
               </div>
-              <h4 className="font-semibold text-gray-800 mb-1">Wheat Bread</h4>
+              <h4 className="font-semibold text-gray-800 mb-1">{t('categories.wheatBread')}</h4>
               <p className="text-sm text-gray-600 mb-2">1 loaf</p>
               <div className="flex items-center justify-between">
                 <span className="font-bold text-green-600">₹35</span>
