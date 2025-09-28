@@ -25,11 +25,72 @@ const SpriteIcons = ({ name, className = "w-5 h-5", color = "currentColor" }) =>
         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
       </svg>
     ),
-    login: (
-      <svg className={className} fill={color} viewBox="0 0 24 24">
-        <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
-      </svg>
-    ),
+login: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
+  </svg>
+),
+
+vendors: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M3 13h2v-2H3v2zm4 0h2v-2H7v2zm4 0h10v-2H11v2zM3 17h2v-2H3v2zm4 0h2v-2H7v2zm4 0h10v-2H11v2zM3 9h18V7H3v2z"/>
+  </svg>
+),
+
+purchase: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 
+             0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 
+             14h9.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0019.99 
+             5H6.21l-.94-2H1v2h3l3.6 7.59-1.35 2.44C6.52 15.37 6 16.28 
+             6 17.25V19h2v-1.75l1.16-2.25z"/>
+  </svg>
+),
+
+stock: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM7 15h2v-2H7v2zm0-4h2V9H7v2zm0-4h2V5H7v2zm4 
+             8h6v-2h-6v2zm0-4h6V9h-6v2zm0-4h6V5h-6v2z"/>
+  </svg>
+),
+
+report: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M3 5v14a2 2 0 002 2h14a2 2 0 002-2V5H3zm5 12H6v-6h2v6zm4 
+             0h-2V9h2v8zm4 0h-2v-4h2v4z"/>
+  </svg>
+),
+
+operations: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65a.5.5 
+             0 00.12-.64l-2-3.46a.5.5 0 00-.61-.22l-2.49 1a7.014 7.014 0 
+             00-1.7-.98l-.38-2.65A.488.488 0 0014 2h-4c-.25 0-.46.18-.49.42l-.38 
+             2.65c-.63.24-1.21.56-1.7.98l-2.49-1a.5.5 0 00-.61.22l-2 
+             3.46c-.14.23-.09.54.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98L2.5 
+             14.63c-.21.11-.26.41-.12.64l2 3.46c.14.23.42.32.61.22l2.49-1c.49.42 
+             1.07.74 1.7.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 
+             .46-.18.49-.42l.38-2.65c.63-.24 1.21-.56 1.7-.98l2.49 
+             1c.19.1.47.01.61-.22l2-3.46a.5.5 0 00-.12-.64l-2.11-1.65zM12 
+             15.5c-1.93 0-3.5-1.57-3.5-3.5S10.07 8.5 12 8.5s3.5 1.57 
+             3.5 3.5-1.57 3.5-3.5 3.5z"/>
+  </svg>
+),
+
+profile: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 
+             5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 
+             5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+  </svg>
+),
+
+store: (
+  <svg className={className} fill={color} viewBox="0 0 24 24">
+    <path d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h16v10H4V12zm4 
+             2v6h2v-6H8zm6 0v6h2v-6h-2z"/>
+  </svg>
+),
     dashboard: (
       <svg className={className} fill={color} viewBox="0 0 24 24">
         <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
@@ -85,11 +146,6 @@ const SpriteIcons = ({ name, className = "w-5 h-5", color = "currentColor" }) =>
         <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H17c-.8 0-1.54.37-2.01.99L14 10h-2v12h2v-6h2v6h2zm-6.5-10.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S12 9.17 12 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-7H9V9.5C9 8.12 7.88 7 6.5 7S4 8.12 4 9.5V15h1.5v7h2zm6.5 0v-4h1v-4.5c0-.83-.67-1.5-1.5-1.5S12 9.67 12 10.5V15h1v4h2z"/>
       </svg>
     ),
-    store: (
-      <svg className={className} fill={color} viewBox="0 0 24 24">
-        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-      </svg>
-    ),
     "user-plus": (
       <svg className={className} fill={color} viewBox="0 0 24 24">
         <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -128,11 +184,6 @@ const SpriteIcons = ({ name, className = "w-5 h-5", color = "currentColor" }) =>
     team: (
       <svg className={className} fill={color} viewBox="0 0 24 24">
         <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H17c-.8 0-1.54.37-2.01.99L14 10h-2v12h2v-6h2v6h2zm-6.5-10.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S12 9.17 12 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-7H9V9.5C9 8.12 7.88 7 6.5 7S4 8.12 4 9.5V15h1.5v7h2zm6.5 0v-4h1v-4.5c0-.83-.67-1.5-1.5-1.5S12 9.67 12 10.5V15h1v4h2z"/>
-      </svg>
-    ),
-    report: (
-      <svg className={className} fill={color} viewBox="0 0 24 24">
-        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
       </svg>
     ),
     error: (

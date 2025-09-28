@@ -195,6 +195,20 @@ export const addPoStockIn = async (stockData) => {
   }
 };
 
+export const getAllStocks = async () => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/add-po-in-store/get-all-stocks",
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(
+      error.response?.data?.message || "Failed to fetch stocks"
+    );
+    throw error;
+  }
+};
 
 export const getVendors = async () => {
   try {
