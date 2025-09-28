@@ -18,10 +18,19 @@ const SuperAdminDashboard = () => {
   const [recentUsers, setRecentUsers] = useState([]);
   const [systemAlerts, setSystemAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [graphLoading, setGraphLoading] = useState(true);
+  
+  // New states for graphs
+  const [storeAnalyticsData, setStoreAnalyticsData] = useState({});
+  const [salesTrendsData, setSalesTrendsData] = useState({});
+  const [engagementData, setEngagementData] = useState({});
+  const [inventoryData, setInventoryData] = useState({});
+  
   const userData = getUserData();
 
   useEffect(() => {
     fetchDashboardData();
+    fetchGraphData();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -69,6 +78,95 @@ const SuperAdminDashboard = () => {
     }
   };
 
+  const fetchGraphData = async () => {
+    try {
+      setGraphLoading(true);
+      
+      setStoreAnalyticsData({
+        totalStores: 42,
+        chartData: {
+          labels: ['Electronics', 'Clothing', 'Grocery', 'Books'],
+          datasets: [
+            {
+              data: [18, 12, 8, 4],
+              backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+            }
+          ]
+        },
+        filteredData: [
+          { name: 'Electronics', percentage: 43, count: 18, icon: '📱' },
+          { name: 'Clothing', percentage: 29, count: 12, icon: '👕' },
+          { name: 'Grocery', percentage: 19, count: 8, icon: '🛒' },
+          { name: 'Books', percentage: 9, count: 4, icon: '📚' }
+        ]
+      });
+
+      setSalesTrendsData({
+        totalSales: '₹2,45,670',
+        totalEarnings: '₹45,230',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'Sales',
+              data: [12000, 19000, 15000, 25000, 22000, 30000],
+              backgroundColor: '#4BC0C0'
+            },
+            {
+              label: 'Earnings',
+              data: [5000, 7000, 5500, 9000, 8000, 11000],
+              backgroundColor: '#FF6384'
+            }
+          ]
+        }
+      });
+
+      setEngagementData({
+        totalUsers: 1245,
+        data: {
+          labels: ['Active', 'Inactive', 'New'],
+          datasets: [
+            {
+              data: [65, 25, 10],
+              backgroundColor: ['#4CAF50', '#F44336', '#2196F3']
+            }
+          ]
+        },
+        filteredData: [
+          { type: 'Active Users', percentage: 65, points: 809, color: '#4CAF50' },
+          { type: 'Inactive Users', percentage: 25, points: 311, color: '#F44336' },
+          { type: 'New Users', percentage: 10, points: 125, color: '#2196F3' }
+        ]
+      });
+
+      setInventoryData({
+        totalProducts: 5420,
+        chartData: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+          datasets: [
+            {
+              label: 'Stock Added',
+              data: [1200, 1900, 1500, 2500],
+              borderColor: '#36A2EB',
+              tension: 0.4
+            },
+            {
+              label: 'Products Sold',
+              data: [800, 1200, 1000, 2000],
+              borderColor: '#FF6384',
+              tension: 0.4
+            }
+          ]
+        }
+      });
+
+    } catch (error) {
+      console.error('Error fetching graph data:', error);
+    } finally {
+      setGraphLoading(false);
+    }
+  };
+
   const dashboardStats = [
     { 
       label: t('dashboard.totalUsers'), 
@@ -103,6 +201,27 @@ const SuperAdminDashboard = () => {
       bg: 'bg-orange-50 dark:bg-orange-900/20' 
     }
   ];
+
+  // Graph options
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom'
+      }
+    }
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top'
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -150,6 +269,208 @@ const SuperAdminDashboard = () => {
             <div className="text-3xl font-bold text-gray-800 dark:text-gray-200">{stat.value}</div>
           </div>
         ))}
+      </div>
+
+      {/* Analytics Graphs Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Store Analytics Card */}
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl border border-blue-200 dark:border-gray-700 shadow-lg p-6 max-h-[370px] relative">
+          {graphLoading && (
+            <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 flex items-center justify-center z-10 rounded-2xl">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          )}
+          
+          <div className="flex justify-between items-center mb-4 border-b border-blue-200 dark:border-gray-700 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Store Categories</h2>
+            <div className="flex items-center space-x-2">
+              <input 
+                type="date"
+                className="border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4 justify-items-center">
+            <div className="w-full flex justify-center">
+              {/* Placeholder for Pie Chart */}
+              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">{storeAnalyticsData.totalStores}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Total Stores</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full">
+              {storeAnalyticsData.filteredData?.map((item, index) => (
+                <div key={index} className="grid grid-cols-3 items-center h-10 mb-2 text-sm">
+                  <p className="flex items-center">
+                    <span className="text-lg mr-2">{item.icon}</span>
+                    <span className="font-medium">{item.name}</span>
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400 text-end">{item.percentage}%</p>
+                  <p className="font-semibold text-end text-gray-800 dark:text-gray-200">{item.count}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-start items-center mt-4 border-t border-blue-200 dark:border-gray-700 pt-2 gap-4">
+            <div className="flex items-center">
+              <SpriteIcons name="store" className="w-5 h-5 text-blue-600 dark:text-orange-400 mr-2" />
+              <span className="text-gray-600 dark:text-gray-400">Total Stores :</span>
+              <div className="font-semibold text-2xl ml-3 text-gray-800 dark:text-gray-200">
+                {storeAnalyticsData.totalStores}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sales and Trends Card */}
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl border border-blue-200 dark:border-gray-700 shadow-lg p-6 max-h-[370px] relative">
+          {graphLoading && (
+            <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 flex items-center justify-center z-10 rounded-2xl">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          )}
+
+          <div className="flex justify-between items-center mb-4 border-b border-blue-200 dark:border-gray-700 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Sales and Trends</h2>
+            <div className="flex items-center space-x-2">
+              <input 
+                type="date"
+                className="border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              />
+            </div>
+          </div>
+
+          <div className="min-h-[200px] mb-4">
+            {/* Placeholder for Bar Chart */}
+            <div className="w-full h-40 bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-900 dark:to-green-900 rounded-lg flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">{salesTrendsData.totalSales}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Current Month Sales</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center mt-4 border-t border-blue-200 dark:border-gray-700 pt-2 gap-4">
+            <div className="flex items-center">
+              <SpriteIcons name="rupee" className="w-5 h-5 text-green-600 dark:text-green-400 mr-2" />
+              <span className="text-gray-600 dark:text-gray-400">Total Sales :</span>
+              <div className="font-semibold text-2xl ml-3 text-gray-800 dark:text-gray-200">
+                {salesTrendsData.totalSales}
+              </div>
+            </div>
+
+            <div className="flex items-center">
+              <SpriteIcons name="rupee" className="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2" />
+              <span className="text-gray-600 dark:text-gray-400">Earnings :</span>
+              <div className="font-semibold text-2xl ml-3 text-gray-800 dark:text-gray-200">
+                {salesTrendsData.totalEarnings}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* User Engagement Status Card */}
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl border border-blue-200 dark:border-gray-700 shadow-lg p-6 max-h-[370px] relative">
+          {graphLoading && (
+            <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 flex items-center justify-center z-10 rounded-2xl">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          )}
+
+          <div className="flex justify-between items-center mb-4 border-b border-blue-200 dark:border-gray-700 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">User Engagement</h2>
+            <div className="flex items-center space-x-2">
+              <input 
+                type="date"
+                className="border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4 justify-items-center">
+            <div className="w-full flex justify-center items-center">
+              {/* Placeholder for Doughnut Chart */}
+              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-green-100 to-blue-100 dark:from-green-900 dark:to-blue-900 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-xl font-bold text-gray-800 dark:text-gray-200">65%</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">Active</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full">
+              {engagementData.filteredData?.map((item, index) => (
+                <div key={index} className="grid grid-cols-2 gap-5 items-center mb-2 text-sm">
+                  <div className="flex items-center">
+                    <div 
+                      style={{ backgroundColor: item.color }} 
+                      className="w-4 h-4 rounded-full mr-2"
+                    ></div>
+                    <span className="font-medium">{item.type}</span>
+                  </div>
+                  <div className="flex items-center justify-around">
+                    <p className="text-gray-500 dark:text-gray-400">{item.percentage}%</p>
+                    <p className="font-semibold text-gray-800 dark:text-gray-200">{item.points}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-start items-center mt-4 border-t border-blue-200 dark:border-gray-700 pt-2 gap-4">
+            <div className="flex items-center">
+              <SpriteIcons name="users" className="w-5 h-5 text-blue-600 dark:text-orange-400 mr-2" />
+              <span className="text-gray-600 dark:text-gray-400">Total Users :</span>
+              <div className="font-semibold text-2xl ml-3 text-gray-800 dark:text-gray-200">
+                {engagementData.totalUsers}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Inventory Status Card */}
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl border border-blue-200 dark:border-gray-700 shadow-lg p-6 max-h-[370px] relative">
+          {graphLoading && (
+            <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 flex items-center justify-center z-10 rounded-2xl">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          )}
+
+          <div className="flex justify-between items-center mb-4 border-b border-blue-200 dark:border-gray-700 pb-2">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Inventory Status</h2>
+            <div className="flex items-center space-x-2">
+              <input 
+                type="date"
+                className="border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              />
+            </div>
+          </div>
+
+          <div className="min-h-[200px] mb-4">
+            {/* Placeholder for Line Chart */}
+            <div className="w-full h-40 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 rounded-lg flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">{inventoryData.totalProducts}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Total Products</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-start items-center mt-4 border-t border-blue-200 dark:border-gray-700 pt-2 gap-4">
+            <div className="flex items-center">
+              <SpriteIcons name="package" className="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2" />
+              <span className="text-gray-600 dark:text-gray-400">Total Products :</span>
+              <div className="font-semibold text-2xl ml-3 text-gray-800 dark:text-gray-200">
+                {inventoryData.totalProducts}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Content Grid */}

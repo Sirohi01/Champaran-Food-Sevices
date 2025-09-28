@@ -32,7 +32,8 @@ const StoresPage = () => {
                 store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 store.address.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 store.address.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                store.email.toLowerCase().includes(searchTerm.toLowerCase())
+                (store.contactInfo && store.contactInfo.email && store.contactInfo.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                store.storeCode.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setFilteredStores(filtered);
         } else {
@@ -54,6 +55,8 @@ const StoresPage = () => {
                     storesData = response.data.data;
                 } else if (response.data && Array.isArray(response.data)) {
                     storesData = response.data;
+                } else if (response.data && response.data.stores && Array.isArray(response.data.stores)) {
+                    storesData = response.data.stores;
                 }
             } else if (Array.isArray(response)) {
                 storesData = response;
@@ -86,32 +89,40 @@ const StoresPage = () => {
     };
 
     // Handle store details view
-    const handleViewStore = async (storeId) => {
-        try {
-            setLoading(true);
-            const storeDetails = await getStoreById(storeId);
-            setSelectedStore(storeDetails);
-            setShowStoreDetails(true);
-        } catch (error) {
-            setError('Failed to fetch store details');
-            console.error('Error fetching store details:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const handleViewStore = async (storeId) => {
+    //     try {
+    //         setLoading(true);
+    //         const storeDetails = await getStoreById(storeId);
+    //         setSelectedStore(storeDetails);
+    //         setShowStoreDetails(true);
+    //     } catch (error) {
+    //         setError('Failed to fetch store details');
+    //         console.error('Error fetching store details:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
+    const handleViewStore = () => {
+            navigate('/dashboard/admin');
+        };
     // Handle edit store
     const handleEditStore = (store) => {
         setEditFormData({
             _id: store._id,
+            companyName: store.companyName || 'Champaran Food Company',
             name: store.name,
-            email: store.email,
-            phone: store.phone,
+            storeCode: store.storeCode,
             address: {
                 street: store.address.street,
                 city: store.address.city,
                 state: store.address.state,
-                zipCode: store.address.zipCode
+                zipCode: store.address.zipCode,
+                country: store.address.country || 'India'
+            },
+            contactInfo: {
+                phone: store.contactInfo.phone,
+                email: store.contactInfo.email
             },
             isActive: store.isActive
         });
@@ -130,6 +141,7 @@ const StoresPage = () => {
             await fetchStores();
             setShowEditModal(false);
             setEditFormData({});
+            setShowStoreDetails(false);
         } catch (error) {
             setError('Failed to update store');
             console.error('Error updating store:', error);
@@ -148,11 +160,40 @@ const StoresPage = () => {
             
             // Refresh stores list
             await fetchStores();
+            
+            // Update selected store if it's currently being viewed
+            if (selectedStore && selectedStore._id === storeId) {
+                setSelectedStore(prev => ({
+                    ...prev,
+                    isActive: !currentStatus
+                }));
+            }
         } catch (error) {
             setError('Failed to update store status');
             console.error('Error updating store status:', error);
         } finally {
             setUpdating(false);
+        }
+    };
+
+    // Handle input change for edit form
+    const handleEditInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        
+        if (name.includes('.')) {
+            const [parent, child] = name.split('.');
+            setEditFormData(prev => ({
+                ...prev,
+                [parent]: {
+                    ...prev[parent],
+                    [child]: type === 'checkbox' ? checked : value
+                }
+            }));
+        } else {
+            setEditFormData(prev => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            }));
         }
     };
 
@@ -177,7 +218,7 @@ const StoresPage = () => {
         );
     }
 
-    if (loading) {
+    if (loading && stores.length === 0) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-black p-6">
                 <div className="max-w-6xl mx-auto">
@@ -335,6 +376,9 @@ const StoresPage = () => {
                                                         {store.isActive ? 'Active' : 'Inactive'}
                                                     </span>
                                                 </div>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                    Code: {store.storeCode}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -357,7 +401,9 @@ const StoresPage = () => {
                                             <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                             </svg>
-                                            <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">{store.phone}</span>
+                                            <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                                                {store.contactInfo?.phone}
+                                            </span>
                                         </div>
 
                                         {/* Email */}
@@ -365,7 +411,9 @@ const StoresPage = () => {
                                             <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                             </svg>
-                                            <span className="text-sm text-gray-600 dark:text-gray-400 truncate">{store.email}</span>
+                                            <span className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                                                {store.contactInfo?.email}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -444,10 +492,16 @@ const StoresPage = () => {
                                         <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                                             {selectedStore.name}
                                         </h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            {selectedStore.companyName}
+                                        </p>
                                         <div className="flex items-center mt-1">
                                             <div className={`w-3 h-3 rounded-full mr-2 ${selectedStore.isActive ? 'bg-green-500' : 'bg-red-500'}`}></div>
                                             <span className={`text-sm font-medium ${selectedStore.isActive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                                 {selectedStore.isActive ? 'Active' : 'Inactive'}
+                                            </span>
+                                            <span className="text-sm text-gray-500 dark:text-gray-400 ml-3">
+                                                Code: {selectedStore.storeCode}
                                             </span>
                                         </div>
                                     </div>
@@ -462,13 +516,13 @@ const StoresPage = () => {
                                                 <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                                 </svg>
-                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.email}</span>
+                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.contactInfo?.email}</span>
                                             </div>
                                             <div className="flex items-center">
                                                 <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                                 </svg>
-                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.phone}</span>
+                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.contactInfo?.phone}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -482,7 +536,7 @@ const StoresPage = () => {
                                             <div className="text-gray-600 dark:text-gray-400">
                                                 <p>{selectedStore.address.street}</p>
                                                 <p>{selectedStore.address.city}, {selectedStore.address.state}</p>
-                                                <p>{selectedStore.address.zipCode}</p>
+                                                <p>{selectedStore.address.zipCode}, {selectedStore.address.country}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -497,10 +551,18 @@ const StoresPage = () => {
                                             <p className="font-semibold text-gray-800 dark:text-gray-200">{formatDate(selectedStore.createdAt)}</p>
                                         </div>
                                         <div>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">Last Updated</p>
+                                            <p className="font-semibold text-gray-800 dark:text-gray-200">{formatDate(selectedStore.updatedAt)}</p>
+                                        </div>
+                                        <div>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
                                             <p className={`font-semibold ${selectedStore.isActive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                                 {selectedStore.isActive ? 'Active' : 'Inactive'}
                                             </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">Store Code</p>
+                                            <p className="font-semibold text-gray-800 dark:text-gray-200">{selectedStore.storeCode}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -565,12 +627,13 @@ const StoresPage = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Store Name
+                                            Store Name *
                                         </label>
                                         <input
                                             type="text"
+                                            name="name"
                                             value={editFormData.name || ''}
-                                            onChange={(e) => setEditFormData({...editFormData, name: e.target.value})}
+                                            onChange={handleEditInputChange}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                             required
                                         />
@@ -578,12 +641,13 @@ const StoresPage = () => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Email
+                                            Store Code *
                                         </label>
                                         <input
-                                            type="email"
-                                            value={editFormData.email || ''}
-                                            onChange={(e) => setEditFormData({...editFormData, email: e.target.value})}
+                                            type="text"
+                                            name="storeCode"
+                                            value={editFormData.storeCode || ''}
+                                            onChange={handleEditInputChange}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                             required
                                         />
@@ -591,12 +655,27 @@ const StoresPage = () => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Phone
+                                            Phone *
                                         </label>
                                         <input
                                             type="tel"
-                                            value={editFormData.phone || ''}
-                                            onChange={(e) => setEditFormData({...editFormData, phone: e.target.value})}
+                                            name="contactInfo.phone"
+                                            value={editFormData.contactInfo?.phone || ''}
+                                            onChange={handleEditInputChange}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Email *
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="contactInfo.email"
+                                            value={editFormData.contactInfo?.email || ''}
+                                            onChange={handleEditInputChange}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                             required
                                         />
@@ -607,27 +686,26 @@ const StoresPage = () => {
                                             Status
                                         </label>
                                         <select
-                                            value={editFormData.isActive ? 'active' : 'inactive'}
-                                            onChange={(e) => setEditFormData({...editFormData, isActive: e.target.value === 'active'})}
+                                            name="isActive"
+                                            value={editFormData.isActive ? 'true' : 'false'}
+                                            onChange={(e) => setEditFormData({...editFormData, isActive: e.target.value === 'true'})}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                         >
-                                            <option value="active">Active</option>
-                                            <option value="inactive">Inactive</option>
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Street Address
+                                        Street Address *
                                     </label>
                                     <input
                                         type="text"
+                                        name="address.street"
                                         value={editFormData.address?.street || ''}
-                                        onChange={(e) => setEditFormData({
-                                            ...editFormData, 
-                                            address: {...editFormData.address, street: e.target.value}
-                                        })}
+                                        onChange={handleEditInputChange}
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                         required
                                     />
@@ -636,15 +714,13 @@ const StoresPage = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            City
+                                            City *
                                         </label>
                                         <input
                                             type="text"
+                                            name="address.city"
                                             value={editFormData.address?.city || ''}
-                                            onChange={(e) => setEditFormData({
-                                                ...editFormData, 
-                                                address: {...editFormData.address, city: e.target.value}
-                                            })}
+                                            onChange={handleEditInputChange}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                             required
                                         />
@@ -652,15 +728,13 @@ const StoresPage = () => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            State
+                                            State *
                                         </label>
                                         <input
                                             type="text"
+                                            name="address.state"
                                             value={editFormData.address?.state || ''}
-                                            onChange={(e) => setEditFormData({
-                                                ...editFormData, 
-                                                address: {...editFormData.address, state: e.target.value}
-                                            })}
+                                            onChange={handleEditInputChange}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                             required
                                         />
@@ -668,19 +742,30 @@ const StoresPage = () => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            ZIP Code
+                                            ZIP Code *
                                         </label>
                                         <input
                                             type="text"
+                                            name="address.zipCode"
                                             value={editFormData.address?.zipCode || ''}
-                                            onChange={(e) => setEditFormData({
-                                                ...editFormData, 
-                                                address: {...editFormData.address, zipCode: e.target.value}
-                                            })}
+                                            onChange={handleEditInputChange}
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
                                             required
                                         />
                                     </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Country
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="address.country"
+                                        value={editFormData.address?.country || 'India'}
+                                        onChange={handleEditInputChange}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500 focus:border-transparent"
+                                    />
                                 </div>
 
                                 <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-600">
