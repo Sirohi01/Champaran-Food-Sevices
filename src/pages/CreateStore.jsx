@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getUserRole, USER_ROLES, createStore } from '../services/coreServices';
 
 const CreateStore = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const userRole = getUserRole();
   const [formData, setFormData] = useState({
     name: '',

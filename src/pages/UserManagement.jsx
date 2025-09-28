@@ -1,16 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getUsers, USER_ROLES, getRoleDisplayName } from '../services/coreServices';
-import { useI18n } from '../i18n/i18n';
-import { useTheme } from '../contexts/ThemeContext';
 import SpriteIcons from '../components/SpriteIcons';
 import CreateUserModal from '../components/CreateUserModal';
 
-const UserManagement = () => {
-  const { t } = useI18n();
-  const { isDark } = useTheme();
-  const navigate = useNavigate();
-  
+const UserManagement = () => {  
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

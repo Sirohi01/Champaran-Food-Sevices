@@ -1,17 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getStores, updateStore } from '../services/coreServices';
-import { useI18n } from '../i18n/i18n';
-import { useTheme } from '../contexts/ThemeContext';
 import SpriteIcons from '../components/SpriteIcons';
 import CreateStoreModal from '../components/CreateStoreModal';
 import EditStoreModal from '../components/EditStoreModal';
 
 const StoreManagement = () => {
-  const { t } = useI18n();
-  const { isDark } = useTheme();
-  const navigate = useNavigate();
-  
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

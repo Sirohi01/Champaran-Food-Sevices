@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
 import { useI18n } from '../i18n/i18n';
 import { getUserData, getRoleDisplayName } from '../services/coreServices';
 
 const DashboardHeader = ({ onToggleSidebar, onLogout }) => {
   const navigate = useNavigate();
-  const { theme, toggleTheme, isDark } = useTheme();
   const { t } = useI18n();
   const userData = getUserData();
 

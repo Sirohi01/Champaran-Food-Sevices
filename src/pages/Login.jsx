@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useI18n } from '../i18n/i18n';
-import { login, loginUser, shouldRedirectToDashboard, getUserRole, getRoleDisplayName } from '../services/coreServices';
+import { login, loginUser, shouldRedirectToDashboard, getRoleDisplayName } from '../services/coreServices';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
