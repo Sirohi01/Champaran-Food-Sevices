@@ -83,7 +83,9 @@ const RoleDashboard = () => {
           '/dashboard/inventory',
           '/dashboard/operations',
           '/dashboard/reports',
-          '/dashboard/profile'
+          '/dashboard/profile',
+          '/dashboard/vendors',
+          '/dashboard/create-vendor',
         ];
         // Get the role-specific dashboard path
         const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/user';

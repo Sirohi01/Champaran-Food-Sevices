@@ -26,6 +26,8 @@ const CategoriesPage = lazy(() => import('../pages/CategoriesPage'));
 const OffersPage = lazy(() => import('../pages/OffersPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ContactPage = lazy(() => import('../pages/ContactPage'));
+const VendorPage = lazy(() => import('../pages/VendorPage'));
+const CreateVendor = lazy(() => import('../pages/CreateVendor'));
 
 const RoleBasedRedirect = () => {
   useEffect(() => {
@@ -104,11 +106,12 @@ const AllRoutes = () => {
               
               {/* Staff Management Routes */}
               <Route path="staff-management" element={<CreateUser />} />
+              <Route path="vendors" element={<VendorPage />} />
+              <Route path="create-vendor" element={<CreateVendor />} />
               
               {/* Other Routes - You can create these components later */}
               <Route path="orders" element={<div className="p-6"><h1 className="text-2xl font-bold">Orders Page</h1><p>Coming Soon...</p></div>} />
               <Route path="purchases" element={<div className="p-6"><h1 className="text-2xl font-bold">Purchases Page</h1><p>Coming Soon...</p></div>} />
-              <Route path="inventory" element={<div className="p-6"><h1 className="text-2xl font-bold">Inventory Page</h1><p>Coming Soon...</p></div>} />
               <Route path="operations" element={<div className="p-6"><h1 className="text-2xl font-bold">Operations Page</h1><p>Coming Soon...</p></div>} />
               <Route path="reports" element={<div className="p-6"><h1 className="text-2xl font-bold">Reports Page</h1><p>Coming Soon...</p></div>} />
               <Route path="profile" element={<div className="p-6"><h1 className="text-2xl font-bold">Profile Page</h1><p>Coming Soon...</p></div>} />

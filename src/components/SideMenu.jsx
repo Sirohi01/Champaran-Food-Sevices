@@ -24,9 +24,9 @@ const SideMenu = ({ mobile = false }) => {
         ...baseItems,
         { to: '/dashboard/user-management', icon: 'users', label: 'User Management' },
         { to: '/dashboard/stores', icon: 'store', label: 'All Stores' },
-        { to: '/dashboard/reports', icon: 'reports', label: 'Reports' },
-        { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
-        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
+        // { to: '/dashboard/reports', icon: 'reports', label: 'Reports' },
+        // { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
+        // { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
       ];
     }
 
@@ -35,8 +35,8 @@ const SideMenu = ({ mobile = false }) => {
         ...baseItems,
         //{ to: '/dashboard/stores', icon: 'store', label: 'All Stores' },
         // { to: '/dashboard/staff-management', icon: 'users', label: 'Staff Management' },
-        { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
-        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
+        // { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
+        { to: '/dashboard/vendors', icon: 'vendors', label: 'Vendor Management' },
       ];
     }
 
@@ -45,15 +45,15 @@ const SideMenu = ({ mobile = false }) => {
         ...baseItems,
         { to: '/dashboard/operations', icon: 'operations', label: 'Operations' },
         { to: '/dashboard/reports', icon: 'reports', label: 'Reports' },
-        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
+        // { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' }
       ];
     }
 
     if (userRole === USER_ROLES.SALES_MAN) {
       return [
         ...baseItems,
-        { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
-        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' },
+        // { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
+        // { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' },
         { to: '/dashboard/profile', icon: 'profile', label: 'Profile' }
       ];
     }
@@ -62,7 +62,7 @@ const SideMenu = ({ mobile = false }) => {
       return [
         ...baseItems,
         { to: '/dashboard/purchases', icon: 'orders', label: 'Purchases' },
-        { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' },
+        // { to: '/dashboard/inventory', icon: 'inventory', label: 'Inventory' },
         { to: '/dashboard/profile', icon: 'profile', label: 'Profile' }
       ];
     }

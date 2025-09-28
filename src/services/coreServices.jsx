@@ -128,6 +128,75 @@ export const login = async (emailId, password) => {
   }
 };
 
+export const createVendor = async (vendorData) => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/vendor/create",
+      method: "POST",
+      body: vendorData,
+    });
+    showMessage.success("Vendor created successfully");
+    return response.data;
+  } catch (error) {
+    showMessage.error(
+      error.response?.data?.message || "Failed to create vendor"
+    );
+    throw error;
+  }
+};  
+
+export const createPurchaseInward = async (purchaseData) => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/inwards/purchase",
+      method: "POST",
+      data: purchaseData,
+    });
+    showMessage.success("Purchase inward created successfully");
+    return response.data;
+  } catch (error) {
+    showMessage.error(
+      error.response?.data?.message || "Failed to create purchase inward"
+    );
+    throw error;
+  }
+};
+
+
+export const addPoStockIn = async (stockData) => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/add-po-in-store/stock-in",
+      method: "POST",
+      data: stockData,
+    });
+    showMessage.success("Stock-in successful");
+    return response.data;
+  } catch (error) {
+    showMessage.error(
+      error.response?.data?.message || "Failed to stock-in"
+    );
+    throw error;
+  }
+};
+
+
+export const getVendors = async () => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/vendor/all",
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(
+      error.response?.data?.message || "Failed to fetch vendors"
+    );
+    throw error;
+  }
+};
+
+
 export const createStore = async (storeData) => {
   try {
     const response = await callApi({
