@@ -80,9 +80,6 @@ const CreateUser = () => {
         method: "POST",
         body: userData
       });
-
-      console.log('User creation response:', response); // Debug log
-      
       if (response.data && response.data.success) {
         setSuccess(`User ${formData.name} created successfully!`);
         // Reset form
@@ -95,8 +92,6 @@ const CreateUser = () => {
           role: '',
           storeId: ''
         });
-        
-        // Redirect after showing success message
         setTimeout(() => {
           navigate('/dashboard/user-management');
         }, 2000);
