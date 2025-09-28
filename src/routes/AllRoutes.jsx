@@ -28,6 +28,8 @@ const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ContactPage = lazy(() => import('../pages/ContactPage'));
 const VendorPage = lazy(() => import('../pages/VendorPage'));
 const CreateVendor = lazy(() => import('../pages/CreateVendor'));
+const CreatePurchaseInward = lazy(() => import('../pages/createPurchaseInward'));
+const PurchaseInwardPage =  lazy(() => import('../pages/PurchaseInwardPage'));
 
 const RoleBasedRedirect = () => {
   useEffect(() => {
@@ -108,7 +110,8 @@ const AllRoutes = () => {
               <Route path="staff-management" element={<CreateUser />} />
               <Route path="vendors" element={<VendorPage />} />
               <Route path="create-vendor" element={<CreateVendor />} />
-              
+              <Route path="create-purchase-inward" element={<CreatePurchaseInward />} />
+              <Route path="purchase-inwards" element={<PurchaseInwardPage />} />              
               {/* Other Routes - You can create these components later */}
               <Route path="orders" element={<div className="p-6"><h1 className="text-2xl font-bold">Orders Page</h1><p>Coming Soon...</p></div>} />
               <Route path="purchases" element={<div className="p-6"><h1 className="text-2xl font-bold">Purchases Page</h1><p>Coming Soon...</p></div>} />

@@ -491,11 +491,11 @@ const testLoginFlow = async () => {
   for (const user of testUsers) {
     try {
       const response = await login(user.email, user.password);
-      console.log(`Login successful for ${user.expectedRole}:`, response);
+      //console.log(`Login successful for ${user.expectedRole}:`, response);
       
       // Test redirect
       const redirectInfo = loginRedirectService.handleLoginRedirect(response);
-      console.log(`Redirect URL: ${redirectInfo.redirectUrl}`);
+      //console.log(`Redirect URL: ${redirectInfo.redirectUrl}`);
       
     } catch (error) {
       console.error(`Login failed for ${user.expectedRole}:`, error);
@@ -511,12 +511,12 @@ const testPermissions = () => {
   const roles = ['super_admin', 'admin', 'manager', 'salesman', 'purchase', 'user'];
   
   roles.forEach(role => {
-    console.log(`\nTesting permissions for ${role}:`);
-    console.log('Can manage users:', permissionService.canManageUsers(role));
-    console.log('Can manage stores:', permissionService.canManageStores(role));
-    console.log('Can view reports:', permissionService.canViewReports(role));
-    console.log('Can manage sales:', permissionService.canManageSales(role));
-    console.log('Can manage purchases:', permissionService.canManagePurchases(role));
+    //console.log(`\nTesting permissions for ${role}:`);
+    //console.log('Can manage users:', permissionService.canManageUsers(role));
+    //console.log('Can manage stores:', permissionService.canManageStores(role));
+    //console.log('Can view reports:', permissionService.canViewReports(role));
+    //console.log('Can manage sales:', permissionService.canManageSales(role));
+    //console.log('Can manage purchases:', permissionService.canManagePurchases(role));
   });
 };
 ```

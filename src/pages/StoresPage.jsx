@@ -46,7 +46,7 @@ const StoresPage = () => {
             setLoading(true);
             setError('');
             const response = await getStores();
-            console.log('Stores API Response:', response);
+            //console.log('Stores API Response:', response);
             
             let storesData = [];
             
@@ -135,7 +135,7 @@ const StoresPage = () => {
         try {
             setUpdating(true);
             const response = await updateStore(editFormData._id, editFormData);
-            console.log('Store updated:', response);
+            //console.log('Store updated:', response);
             
             // Refresh stores list
             await fetchStores();
@@ -156,7 +156,7 @@ const StoresPage = () => {
             setUpdating(true);
             const updatedData = { isActive: !currentStatus };
             const response = await updateStore(storeId, updatedData);
-            console.log('Store status updated:', response);
+            //console.log('Store status updated:', response);
             
             // Refresh stores list
             await fetchStores();

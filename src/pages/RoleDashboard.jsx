@@ -23,7 +23,7 @@ const RoleDashboard = () => {
         // Check authentication and session status
         if (!isAuthenticated()) {
           if (isDevelopment()) {
-            console.log('Not authenticated, redirecting to login');
+            //console.log('Not authenticated, redirecting to login');
           }
           navigate('/login', { 
             state: { from: location.pathname },
@@ -35,7 +35,7 @@ const RoleDashboard = () => {
         // Check if session is expired
         if (isSessionExpired()) {
           if (isDevelopment()) {
-            console.log('Session expired, logging out');
+            //console.log('Session expired, logging out');
           }
           logoutUser();
           navigate('/login', { 
@@ -50,7 +50,7 @@ const RoleDashboard = () => {
         
         if (!role || !user) {
           if (isDevelopment()) {
-            console.log('No role or user data found, logging out');
+            //console.log('No role or user data found, logging out');
           }
           logoutUser();
           navigate('/login', { 
@@ -86,6 +86,8 @@ const RoleDashboard = () => {
           '/dashboard/profile',
           '/dashboard/vendors',
           '/dashboard/create-vendor',
+          '/dashboard/create-purchase-inward',
+          '/dashboard/purchase-inwards',
         ];
         // Get the role-specific dashboard path
         const roleDashboardPath = DASHBOARD_ROUTES[role] || '/dashboard/user';
@@ -93,7 +95,7 @@ const RoleDashboard = () => {
         // If we're on /dashboard or /dashboard/home, redirect to role-specific dashboard
         if (currentPath === '/dashboard' || currentPath === '/dashboard/' || currentPath === '/dashboard/home') {
           if (isDevelopment()) {
-            console.log(`[RoleDashboard] Redirecting from ${currentPath} to role dashboard: ${roleDashboardPath}`);
+            //console.log(`[RoleDashboard] Redirecting from ${currentPath} to role dashboard: ${roleDashboardPath}`);
           }
           navigate(roleDashboardPath, { replace: true });
           return;
@@ -110,7 +112,7 @@ const RoleDashboard = () => {
           
           if (!isOtherValidPath) {
             if (isDevelopment()) {
-              console.log(`[RoleDashboard] Redirecting to role dashboard: ${roleDashboardPath}`);
+              //console.log(`[RoleDashboard] Redirecting to role dashboard: ${roleDashboardPath}`);
             }
             navigate(roleDashboardPath, { replace: true });
             return;

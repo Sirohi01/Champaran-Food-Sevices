@@ -33,7 +33,7 @@ const StoreManagement = () => {
       setError('');
       const response = await getStores();
       
-      console.log('API Response:', response); // Debug log
+      //console.log('API Response:', response); // Debug log
       
       if (response && response.success && response.data && response.data.data) {
         setStores(response.data.data);

@@ -124,10 +124,10 @@
             isActive: formData.isActive
         };
 
-        console.log('Sending vendor data:', vendorData); // Debug log
+        //console.log('Sending vendor data:', vendorData); // Debug log
 
         const response = await createVendor(vendorData);
-        console.log('Create vendor response:', response); // Debug log
+        //console.log('Create vendor response:', response); // Debug log
 
         // Since createVendor returns response.data and shows success message automatically,
         // we just need to check if response exists (no error was thrown)

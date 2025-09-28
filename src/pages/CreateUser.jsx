@@ -27,11 +27,11 @@ const CreateUser = () => {
   const fetchStores = async () => {
     try {
       const response = await getStores();
-      console.log('Stores response:', response); // Debug log
+      //console.log('Stores response:', response); // Debug log
       // Handle nested response structure - getStores returns response.data
       if (response && response.success && response.data && response.data.data) {
         setStores(response.data.data);
-        console.log('Stores set:', response.data.data); // Debug log
+        //console.log('Stores set:', response.data.data); // Debug log
       }
     } catch (error) {
       console.error('Error fetching stores:', error);

@@ -4,7 +4,6 @@ import callApi from './apiServices';
 const showMessage = {
   error: (msg) => {
     console.error(msg);
-    // You can replace this with any toast library or custom notification
     alert(`Error: ${msg}`);
   },
   success: (msg) => {
@@ -120,7 +119,7 @@ export const login = async (emailId, password) => {
       method: "POST",
       body: { email: emailId, password }
     });
-    console.log('API Response:', response.data);
+    //console.log('API Response:', response.data);
     return response.data;
   } catch (error) {
     showMessage.error(error.response?.data?.message || "Login failed");
@@ -145,12 +144,27 @@ export const createVendor = async (vendorData) => {
   }
 };  
 
+export const getPurchaseInwards = async () => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/inwards/purchase",
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    showMessage.error(
+      error.response?.data?.message || "Failed to fetch purchase inwards"
+    );
+    throw error;
+  }
+};
+
 export const createPurchaseInward = async (purchaseData) => {
   try {
     const response = await callApi({
       endpoint: "api/v1/inwards/purchase",
       method: "POST",
-      data: purchaseData,
+      body: purchaseData,
     });
     showMessage.success("Purchase inward created successfully");
     return response.data;
@@ -168,7 +182,7 @@ export const addPoStockIn = async (stockData) => {
     const response = await callApi({
       endpoint: "api/v1/add-po-in-store/stock-in",
       method: "POST",
-      data: stockData,
+      body: stockData,
     });
     showMessage.success("Stock-in successful");
     return response.data;
@@ -428,7 +442,8 @@ export const isDevelopment = () => {
 
 export const logUserInfo = () => {
   if (isDevelopment()) {
-    console.log('User Info:', {
+    console.log('User Info:', 
+    {
       isAuthenticated: isAuthenticated(),
       userData: getUserData(),
       role: getUserRole(),

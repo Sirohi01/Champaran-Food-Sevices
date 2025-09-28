@@ -37,6 +37,7 @@ const SideMenu = ({ mobile = false }) => {
         // { to: '/dashboard/staff-management', icon: 'users', label: 'Staff Management' },
         // { to: '/dashboard/orders', icon: 'orders', label: 'Orders' },
         { to: '/dashboard/vendors', icon: 'vendors', label: 'Vendor Management' },
+        { to: '/dashboard/purchase-inwards', icon: 'vendors', label: 'Purchase InWard' },
       ];
     }
 
