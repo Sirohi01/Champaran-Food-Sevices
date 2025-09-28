@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserRole, USER_ROLES, getStores, getStoreById, updateStore } from '../services/coreServices';
+import { getUserRole, USER_ROLES, getStores, updateStore } from '../services/coreServices';
 
 const StoresPage = () => {
     const navigate = useNavigate();
@@ -103,9 +103,9 @@ const StoresPage = () => {
     //     }
     // };
 
-    const handleViewStore = () => {
-            navigate('/dashboard/admin');
-        };
+    // const handleViewStore = () => {
+    //         navigate('/dashboard/admin');
+    //     };
     // Handle edit store
     const handleEditStore = (store) => {
         setEditFormData({
@@ -425,12 +425,12 @@ const StoresPage = () => {
                                         
                                         {/* Action Buttons */}
                                         <div className="flex gap-2">
-                                            <button
+                                            {/* <button
                                                 onClick={() => handleViewStore(store._id)}
                                                 className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
                                             >
                                                 View
-                                            </button>
+                                            </button> */}
                                             
                                             {userRole === USER_ROLES.SUPER_ADMIN && (
                                                 <>

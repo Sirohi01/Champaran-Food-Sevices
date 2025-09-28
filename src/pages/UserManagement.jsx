@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUsers, USER_ROLES, getRoleDisplayName } from '../services/coreServices';
-import { useI18n } from '../i18n/i18n';
-import { useTheme } from '../contexts/ThemeContext';
 import SpriteIcons from '../components/SpriteIcons';
 import CreateUserModal from '../components/CreateUserModal';
 
-const UserManagement = () => {
-  const { t } = useI18n();
-  const { isDark } = useTheme();
+const UserManagement = () => {  
   const navigate = useNavigate();
-  
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -28,8 +23,6 @@ const UserManagement = () => {
       setLoading(true);
       setError('');
       const response = await getUsers();
-      
-      console.log('API Response:', response);
       
       if (response && response.success && response.data && response.data.data) {
         setUsers(response.data.data);
@@ -51,10 +44,14 @@ const UserManagement = () => {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  const handleCreateUserRoute = () => {
+    navigate('/dashboard/create-user');
+  };
+
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.phone?.toString().includes(searchTerm);
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.phone?.toString().includes(searchTerm);
     
     const matchesRole = !roleFilter || user.role === roleFilter;
     
@@ -109,7 +106,6 @@ const UserManagement = () => {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      {/* Header Section */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
@@ -125,16 +121,25 @@ const UserManagement = () => {
           </p>
         </div>
         
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="group flex-shrink-0 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 dark:hover:from-orange-600 dark:hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-3 flex items-center justify-center gap-2 font-medium"
-        >
-          <SpriteIcons name="user-plus" className="w-5 h-5 transition-transform group-hover:scale-110" />
-          <span>Create New User</span>
-        </button>
+        <div className="flex gap-3 flex-wrap">
+          {/* <button
+            onClick={() => setShowCreateModal(true)}
+            className="group flex-shrink-0 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 dark:hover:from-orange-600 dark:hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl px-4 py-3 flex items-center justify-center gap-2 font-medium text-sm"
+          >
+            <SpriteIcons name="user-plus" className="w-4 h-4 transition-transform group-hover:scale-110" />
+            <span>Create User (Modal)</span>
+          </button> */}
+          
+          <button
+            onClick={handleCreateUserRoute}
+            className="group flex-shrink-0 bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-500 dark:to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl px-4 py-3 flex items-center justify-center gap-2 font-medium text-sm"
+          >
+            <SpriteIcons name="external-link" className="w-4 h-4 transition-transform group-hover:scale-110" />
+            <span>+ Create User</span>
+          </button>
+        </div>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-3">
           <SpriteIcons name="alert-circle" className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />
@@ -142,10 +147,8 @@ const UserManagement = () => {
         </div>
       )}
 
-      {/* Filters Card */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Search Input */}
           <div className="lg:col-span-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Search Users
@@ -165,7 +168,6 @@ const UserManagement = () => {
             </div>
           </div>
 
-          {/* Role Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Filter by Role
@@ -182,7 +184,6 @@ const UserManagement = () => {
           </div>
         </div>
 
-        {/* Active Filters */}
         {(searchTerm || roleFilter) && (
           <div className="flex items-center gap-2 mt-4 flex-wrap">
             <span className="text-sm text-gray-600 dark:text-gray-400">Active filters:</span>
@@ -206,7 +207,6 @@ const UserManagement = () => {
         )}
       </div>
 
-      {/* Results Summary */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
           Users ({filteredUsers.length})
@@ -218,7 +218,6 @@ const UserManagement = () => {
         )}
       </div>
 
-      {/* Users Table/Card Container */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
         {filteredUsers.length === 0 ? (
           <div className="text-center py-12 px-4">
@@ -252,7 +251,6 @@ const UserManagement = () => {
           </div>
         ) : (
           <>
-            {/* Desktop Table */}
             <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600">
@@ -316,11 +314,9 @@ const UserManagement = () => {
               </table>
             </div>
 
-            {/* Mobile Card View */}
             <div className="lg:hidden space-y-3 p-4">
               {filteredUsers.map((user) => (
                 <div key={user._id || user.id} className="bg-gray-50/50 dark:bg-gray-700/30 rounded-xl border border-gray-200 dark:border-gray-600 p-4 hover:shadow-md transition-shadow">
-                  {/* Header */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 dark:from-orange-400 dark:to-red-500 rounded-full flex items-center justify-center text-white font-semibold text-xs">
@@ -338,7 +334,6 @@ const UserManagement = () => {
                     </span>
                   </div>
 
-                  {/* Details */}
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -366,7 +361,6 @@ const UserManagement = () => {
         )}
       </div>
 
-      {/* Create User Modal */}
       {showCreateModal && (
         <CreateUserModal
           onClose={() => setShowCreateModal(false)}

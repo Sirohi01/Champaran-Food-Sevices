@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import callApi from '../services/apiServices';
-import { USER_ROLES } from '../services/coreServices';
+import { USER_ROLES, getStores } from '../services/coreServices';
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -26,12 +26,12 @@ const CreateUser = () => {
 
   const fetchStores = async () => {
     try {
-      const response = await callApi({
-        endpoint: "api/v1/store",
-        method: "GET"
-      });
-      if (response.data && response.data.data) {
+      const response = await getStores();
+      console.log('Stores response:', response); // Debug log
+      // Handle nested response structure - getStores returns response.data
+      if (response && response.success && response.data && response.data.data) {
         setStores(response.data.data);
+        console.log('Stores set:', response.data.data); // Debug log
       }
     } catch (error) {
       console.error('Error fetching stores:', error);
@@ -81,6 +81,8 @@ const CreateUser = () => {
         body: userData
       });
 
+      console.log('User creation response:', response); // Debug log
+      
       if (response.data && response.data.success) {
         setSuccess(`User ${formData.name} created successfully!`);
         // Reset form
@@ -93,6 +95,11 @@ const CreateUser = () => {
           role: '',
           storeId: ''
         });
+        
+        // Redirect after showing success message
+        setTimeout(() => {
+          navigate('/dashboard/user-management');
+        }, 2000);
       }
     } catch (error) {
       setError(error.message || 'Failed to create user');
@@ -115,13 +122,13 @@ const CreateUser = () => {
         {/* Header */}
         <div className="mb-8">
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/dashboard/user-management')}
             className="mb-4 flex items-center text-blue-600 dark:text-orange-400 hover:text-blue-700 dark:hover:text-orange-300 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Dashboard
+            Back to User Management
           </button>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200">Create New User</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">Add a new user to the system</p>
@@ -211,7 +218,7 @@ const CreateUser = () => {
               </div>
 
               {/* Store (if applicable) */}
-              {(formData.role === USER_ROLES.ADMIN || formData.role === USER_ROLES.MANAGER || formData.role === USER_ROLES.SALES_MAN) && (
+              {(formData.role === USER_ROLES.ADMIN || formData.role === USER_ROLES.MANAGER || formData.role === USER_ROLES.SALES_MAN || formData.role === USER_ROLES.PURCHASE_MAN || formData.role === USER_ROLES.USER) && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Store Assignment
@@ -224,7 +231,9 @@ const CreateUser = () => {
                   >
                     <option value="">Select Store (Optional)</option>
                     {stores.map(store => (
-                      <option key={store._id} value={store._id}>{store.name}</option>
+                      <option key={store._id} value={store._id}>
+                        {store.name} ({store.storeCode}) - {store.address.city}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -267,7 +276,7 @@ const CreateUser = () => {
             <div className="flex justify-end space-x-4 pt-6">
               <button
                 type="button"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/dashboard/user-management')}
                 className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 Cancel
