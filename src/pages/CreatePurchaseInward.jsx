@@ -84,7 +84,7 @@
                     }
                 } catch (error) {
                     console.error('Error fetching admin store:', error);
-                    setError('Failed to load your store information');
+                    // setError('Failed to load your store information');
                 }
             } else {
                 setError('No store assigned to your account');
@@ -361,7 +361,7 @@
                     </select>
                 </div>
 
-                <div>
+                {/* <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
                     Store *
                     </label>
@@ -396,7 +396,7 @@
                         ))}
                     </select>
                     )}
-                </div>
+                </div> */}
                 </div>
 
                 {/* Items Section */}
