@@ -16,15 +16,23 @@ export default defineConfig({
     })
   ],
   server: {
+    host: true,               // bind 0.0.0.0
+    port: process.env.PORT || 5173,
+    strictPort: true,
+    allowedHosts: 'all',      // allow any host
+  },
+
+  preview: {
     host: true,
     port: process.env.PORT || 5173,
     strictPort: true,
-    allowedHosts: 'all',
+    allowedHosts: 'all',      // allow any host
   },
   build: {
     target: 'esnext',
     minify: 'esbuild',
     sourcemap: false,
+    outDir: 'dist',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -33,11 +41,10 @@ export default defineConfig({
         },
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        assetFileNames: 'assets/[name]-[hash].[ext]',
       }
     },
     chunkSizeWarningLimit: 1000,
-    outDir: 'dist'
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
