@@ -145,10 +145,11 @@ export const createVendor = async (vendorData) => {
   }
 };  
 
-export const getPurchaseInwards = async () => {
+export const getPurchaseInwards = async (storeId = null) => {
   try {
+    const params = storeId ? `?storeId=${storeId}` : ''; 
     const response = await callApi({
-      endpoint: "api/v1/inwards/get-all-purchase-order",
+      endpoint: `api/v1/inwards/get-all-purchase-order${params}`,
       method: "GET",
     });
     return response.data;

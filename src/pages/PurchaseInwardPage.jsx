@@ -1,30 +1,52 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserRole, USER_ROLES, getPurchaseInwards } from '../services/coreServices';
+import { useAuth } from '../services/AuthContext';
 import * as XLSX from 'xlsx';
 
 const PurchaseInwardPage = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const userRole = getUserRole();
     const [purchases, setPurchases] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // Start loading initially
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedPurchase, setSelectedPurchase] = useState(null);
     const [showDetailView, setShowDetailView] = useState(false);
 
-    const canViewPurchases = useMemo(() => 
+    const canViewPurchases = useMemo(() =>
         [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN].includes(userRole),
         [userRole]
     );
 
+    // 👇 FETCH FUNCTION IS NOW MORE ROBUST
     const fetchPurchases = useCallback(async () => {
-        if (!canViewPurchases) return;
+        // Double-check permissions and user object existence
+        if (!canViewPurchases || !user) {
+            setLoading(false); // Stop loading if user isn't authorized or loaded
+            return;
+        }
+
+        setError('');
+
+        let storeIdToFetch;
+        if (userRole === USER_ROLES.SUPER_ADMIN) {
+            storeIdToFetch = null; // Super Admin fetches all
+        } else {
+            // For other roles, storeId is mandatory
+            if (!user.storeId) {
+                console.error("User is not a Super Admin and has no associated storeId.");
+                setError("Your account is not linked to a store. Please contact an administrator.");
+                setPurchases([]);
+                setLoading(false);
+                return; // Stop execution
+            }
+            storeIdToFetch = user.storeId;
+        }
 
         try {
-            setLoading(true);
-            setError('');
-            const response = await getPurchaseInwards();
+            const response = await getPurchaseInwards(storeIdToFetch);
             let purchasesData = [];
             if (response?.success && response.data) {
                 if (response.data.data && Array.isArray(response.data.data)) {
@@ -45,17 +67,23 @@ const PurchaseInwardPage = () => {
             console.error('Error fetching purchases:', error);
             setPurchases([]);
         } finally {
+            // Stop loading only after the API call is complete (success or fail)
             setLoading(false);
         }
-    }, [canViewPurchases]);
+    }, [canViewPurchases, userRole, user]); // Depend on the whole `user` object
 
+    // 👇 USEEFFECT IS NOW SIMPLER AND SAFER
     useEffect(() => {
-        fetchPurchases();
-    }, [fetchPurchases]);
+        // If the user object is available, fetch the data.
+        // If not, the component remains in its initial `loading` state,
+        // patiently waiting for the user object to load.
+        if (user) {
+            fetchPurchases();
+        }
+    }, [user, fetchPurchases]); // Re-run this effect when `user` is available
 
     const filteredPurchases = useMemo(() => {
         if (!searchTerm) return purchases;
-
         return purchases.filter(purchase =>
             purchase.vendorId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             purchase.storeId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -77,6 +105,7 @@ const PurchaseInwardPage = () => {
     }, []);
 
     const calculateTotalAmount = useCallback((items) => {
+        if (!Array.isArray(items)) return 0;
         return items.reduce((total, item) => total + (item.quantityOrdered * item.rate), 0);
     }, []);
 
@@ -111,6 +140,7 @@ const PurchaseInwardPage = () => {
     const getPurchaseOrderNumber = useCallback((purchase) => {
         return purchase.poNumber || purchase.purchaseOrderNumber || 'N/A';
     }, []);
+
     const exportToExcel = useCallback(() => {
         const worksheetData = filteredPurchases.map((purchase, index) => ({
             'S.No.': index + 1,
@@ -123,31 +153,19 @@ const PurchaseInwardPage = () => {
             'Total Items': purchase.items?.length || 0,
             'Order ID': purchase._id
         }));
-
         const worksheet = XLSX.utils.json_to_sheet(worksheetData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Purchase Inwards');
         const colWidths = [
-            { wch: 8 },  // S.No.
-            { wch: 20 }, // Purchase Order #
-            { wch: 25 }, // Vendor Name
-            { wch: 15 }, // Vendor Code
-            { wch: 15 }, // Order Date
-            { wch: 12 }, // Status
-            { wch: 15 }, // Total Amount
-            { wch: 12 }, // Total Items
-            { wch: 30 }  // Order ID
+            { wch: 8 }, { wch: 20 }, { wch: 25 }, { wch: 15 },
+            { wch: 15 }, { wch: 12 }, { wch: 15 }, { wch: 12 }, { wch: 30 }
         ];
         worksheet['!cols'] = colWidths;
-
-        // Generate Excel file
         XLSX.writeFile(workbook, `Purchase_Inwards_${new Date().toISOString().split('T')[0]}.xlsx`);
     }, [filteredPurchases, getPurchaseOrderNumber, formatDate, calculateTotalAmount]);
 
-    // Mobile Card View Component
     const PurchaseCard = useCallback(({ purchase }) => (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 mb-4">
-            {/* Header */}
             <div className="flex justify-between items-start mb-3">
                 <div>
                     <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-lg">
@@ -160,7 +178,6 @@ const PurchaseInwardPage = () => {
                 {getStatusBadge(purchase.status)}
             </div>
 
-            {/* Vendor Info */}
             <div className="mb-3">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Vendor</p>
                 <p className="font-medium text-gray-900 dark:text-gray-100">
@@ -168,7 +185,6 @@ const PurchaseInwardPage = () => {
                 </p>
             </div>
 
-            {/* Items Preview */}
             <div className="mb-3">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Items</p>
                 <div className="space-y-1">
@@ -190,7 +206,6 @@ const PurchaseInwardPage = () => {
                 </div>
             </div>
 
-            {/* Footer */}
             <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
@@ -208,7 +223,6 @@ const PurchaseInwardPage = () => {
         </div>
     ), [formatDate, getStatusBadge, calculateTotalAmount, handleViewDetails, getProductName, getProductUnit, getPurchaseOrderNumber]);
 
-    // Detail View Modal Component
     const DetailView = useCallback(({ purchase, onClose }) => {
         const handlePrint = useCallback(() => {
             const printContent = document.getElementById('print-content');
@@ -222,16 +236,13 @@ const PurchaseInwardPage = () => {
 
         return (
             <>
-                {/* Print Content */}
                 <div id="print-content" className="hidden">
                     <div className="p-8 bg-white" style={{ fontFamily: 'Arial, sans-serif' }}>
-                        {/* Company Header */}
                         <div className="text-center border-b-2 border-gray-300 pb-4 mb-6">
                             <h1 className="text-2xl font-bold text-gray-800">PURCHASE ORDER</h1>
                             <p className="text-gray-600">Purchase Inward Document</p>
                         </div>
 
-                        {/* Order Information */}
                         <div className="grid grid-cols-2 gap-6 mb-6">
                             <div className="space-y-3">
                                 <div>
@@ -276,7 +287,6 @@ const PurchaseInwardPage = () => {
                             </div>
                         </div>
 
-                        {/* Items Table */}
                         <div className="mb-6">
                             <h3 className="text-lg font-semibold text-gray-800 mb-4">Order Items</h3>
                             <table className="w-full border border-gray-300">
@@ -317,7 +327,6 @@ const PurchaseInwardPage = () => {
                             </table>
                         </div>
 
-                        {/* Additional Information */}
                         <div className="grid grid-cols-2 gap-6 border-t pt-6 text-sm">
                             <div>
                                 <h4 className="font-semibold text-gray-700 mb-1">Order ID</h4>
@@ -333,10 +342,8 @@ const PurchaseInwardPage = () => {
                     </div>
                 </div>
 
-                {/* Modal */}
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                        {/* Header */}
                         <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 rounded-t-xl">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
@@ -353,9 +360,7 @@ const PurchaseInwardPage = () => {
                             </div>
                         </div>
 
-                        {/* Content */}
                         <div className="p-6">
-                            {/* Order Information */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div className="space-y-4">
                                     <div>
@@ -400,7 +405,6 @@ const PurchaseInwardPage = () => {
                                 </div>
                             </div>
 
-                            {/* Items Table */}
                             <div className="mb-6">
                                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Order Items</h3>
                                 <div className="overflow-x-auto">
@@ -443,8 +447,7 @@ const PurchaseInwardPage = () => {
                                 </div>
                             </div>
 
-                            {/* Additional Information */}
-                            <div className="grid grid-cols-1 md:grid-col-2 gap-6 border-t pt-6 text-sm">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6 text-sm">
                                 <div>
                                     <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Order ID</h4>
                                     <p className="font-mono text-gray-600 dark:text-gray-400">{purchase._id}</p>
@@ -458,7 +461,6 @@ const PurchaseInwardPage = () => {
                             </div>
                         </div>
 
-                        {/* Footer Actions */}
                         <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 p-6 rounded-b-xl">
                             <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
                                 <button
@@ -519,7 +521,6 @@ const PurchaseInwardPage = () => {
             </div>
         );
     }
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-black p-4 sm:p-6">
             <div className="max-w-7xl mx-auto">
