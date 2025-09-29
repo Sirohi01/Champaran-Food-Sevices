@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserRole, USER_ROLES, getVendors } from '../services/coreServices';
+import * as XLSX from 'xlsx';
+
 const VendorPage = () => {
     const navigate = useNavigate();
     const userRole = getUserRole();
@@ -11,9 +13,6 @@ const VendorPage = () => {
     const [filteredVendors, setFilteredVendors] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState(null);
     const [showVendorDetails, setShowVendorDetails] = useState(false);
-    // const [showEditModal, setShowEditModal] = useState(false);
-    // const [editFormData, setEditFormData] = useState({});
-    // const [updating, setUpdating] = useState(false);
 
     const canViewVendors = [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN].includes(userRole);
 
@@ -84,56 +83,62 @@ const VendorPage = () => {
         });
     };
 
+    // Excel Export Function
+    const exportToExcel = () => {
+        const worksheetData = filteredVendors.map((vendor, index) => ({
+            'S.No.': index + 1,
+            'Vendor Name': vendor.name,
+            'Vendor Code': vendor.vendorCode,
+            'Contact Person': vendor.contactInfo?.contactPerson || 'N/A',
+            'Email': vendor.contactInfo?.email || 'N/A',
+            'Phone': vendor.contactInfo?.phone || 'N/A',
+            'GST Number': vendor.gstNumber || 'N/A',
+            'Address': `${vendor.address.street}, ${vendor.address.city}, ${vendor.address.state} - ${vendor.address.zipCode}`,
+            'Status': vendor.isActive ? 'Active' : 'Inactive',
+            'Created Date': formatDate(vendor.createdAt),
+            'Vendor ID': vendor._id
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Vendors');
+
+        // Add styling through column widths
+        const colWidths = [
+            { wch: 8 },   // S.No.
+            { wch: 25 },  // Vendor Name
+            { wch: 15 },  // Vendor Code
+            { wch: 20 },  // Contact Person
+            { wch: 25 },  // Email
+            { wch: 15 },  // Phone
+            { wch: 20 },  // GST Number
+            { wch: 40 },  // Address
+            { wch: 12 },  // Status
+            { wch: 15 },  // Created Date
+            { wch: 30 }   // Vendor ID
+        ];
+        worksheet['!cols'] = colWidths;
+
+        // Generate Excel file
+        XLSX.writeFile(workbook, `Vendors_${new Date().toISOString().split('T')[0]}.xlsx`);
+    };
+
     // Handle vendor details view
     const handleViewVendor = (vendor) => {
         setSelectedVendor(vendor);
         setShowVendorDetails(true);
     };
 
-    // Handle edit vendor
-    // const handleEditVendor = (vendor) => {
-    //     setEditFormData({
-    //         _id: vendor._id,
-    //         name: vendor.name,
-    //         vendorCode: vendor.vendorCode,
-    //         gstNumber: vendor.gstNumber,
-    //         address: {
-    //             street: vendor.address.street,
-    //             city: vendor.address.city,
-    //             state: vendor.address.state,
-    //             zipCode: vendor.address.zipCode,
-    //             country: vendor.address.country || 'India'
-    //         },
-    //         contactInfo: {
-    //             phone: vendor.contactInfo.phone,
-    //             email: vendor.contactInfo.email,
-    //             contactPerson: vendor.contactInfo.contactPerson
-    //         },
-    //         isActive: vendor.isActive
-    //     });
-    //     setShowEditModal(true);
-    // };
-
-    // // Handle input change for edit form
-    // const handleEditInputChange = (e) => {
-    //     const { name, value, type, checked } = e.target;
+    // Handle print vendor details
+    const handlePrintVendor = () => {
+        const printContent = document.getElementById('print-vendor-content');
+        const originalContents = document.body.innerHTML;
         
-    //     if (name.includes('.')) {
-    //         const [parent, child] = name.split('.');
-    //         setEditFormData(prev => ({
-    //             ...prev,
-    //             [parent]: {
-    //                 ...prev[parent],
-    //                 [child]: type === 'checkbox' ? checked : value
-    //             }
-    //         }));
-    //     } else {
-    //         setEditFormData(prev => ({
-    //             ...prev,
-    //             [name]: type === 'checkbox' ? checked : value
-    //         }));
-    //     }
-    // };
+        document.body.innerHTML = printContent.innerHTML;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    };
 
     if (!canViewVendors) {
         return (
@@ -210,6 +215,22 @@ const VendorPage = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
+
+                            {/* Export Excel Button */}
+                            <button
+                                onClick={exportToExcel}
+                                disabled={filteredVendors.length === 0}
+                                className={`px-4 py-2 rounded-lg transition-all flex items-center justify-center ${
+                                    filteredVendors.length === 0
+                                        ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                                        : 'bg-green-600 text-white hover:bg-green-700 shadow-lg transform hover:scale-105'
+                                }`}
+                            >
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export Excel
+                            </button>
                             
                             {[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN].includes(userRole) && (
                                 <button
@@ -393,15 +414,6 @@ const VendorPage = () => {
                                             >
                                                 View
                                             </button>
-                                            
-                                            {/* {[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN].includes(userRole) && (
-                                                <button
-                                                    // onClick={() => handleEditVendor(vendor)}
-                                                    className="px-3 py-1 text-xs bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
-                                                >
-                                                    Edit
-                                                </button>
-                                            )} */}
                                         </div>
                                     </div>
                                 </div>
@@ -410,6 +422,94 @@ const VendorPage = () => {
                     </>
                 )}
             </div>
+
+            {/* Print Content */}
+            {showVendorDetails && selectedVendor && (
+                <div id="print-vendor-content" className="hidden">
+                    <div className="p-8 bg-white" style={{ fontFamily: 'Arial, sans-serif' }}>
+                        <div className="text-center border-b-2 border-gray-300 pb-4 mb-6">
+                            <h1 className="text-2xl font-bold text-gray-800">VENDOR DETAILS</h1>
+                            <p className="text-gray-600">Vendor Information Document</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6 mb-6">
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">Vendor Name</label>
+                                    <p className="text-lg bg-gray-50 p-2 rounded border">{selectedVendor.name}</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">Vendor Code</label>
+                                    <p className="text-lg bg-gray-50 p-2 rounded border">{selectedVendor.vendorCode}</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">Status</label>
+                                    <p className="text-lg bg-gray-50 p-2 rounded border capitalize">
+                                        {selectedVendor.isActive ? 'Active' : 'Inactive'}
+                                    </p>
+                                </div>
+                            </div>
+                           
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">Contact Person</label>
+                                    <p className="text-lg bg-gray-50 p-2 rounded border">
+                                        {selectedVendor.contactInfo?.contactPerson || 'N/A'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">GST Number</label>
+                                    <p className="text-lg bg-gray-50 p-2 rounded border">
+                                        {selectedVendor.gstNumber || 'N/A'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">Created Date</label>
+                                    <p className="text-lg bg-gray-50 p-2 rounded border">
+                                        {formatDate(selectedVendor.createdAt)}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-6">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact Information</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">Email</label>
+                                    <p className="bg-gray-50 p-2 rounded border">{selectedVendor.contactInfo?.email || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700">Phone</label>
+                                    <p className="bg-gray-50 p-2 rounded border">{selectedVendor.contactInfo?.phone || 'N/A'}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-6">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Address</h3>
+                            <div className="bg-gray-50 p-4 rounded border">
+                                <p className="font-medium">{selectedVendor.address.street}</p>
+                                <p>{selectedVendor.address.city}, {selectedVendor.address.state}</p>
+                                <p>{selectedVendor.address.zipCode}, {selectedVendor.address.country || 'India'}</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6 border-t pt-6 text-sm">
+                            <div>
+                                <h4 className="font-semibold text-gray-700 mb-1">Vendor ID</h4>
+                                <p className="font-mono text-gray-600">{selectedVendor._id}</p>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold text-gray-700 mb-1">Last Updated</h4>
+                                <p className="text-gray-600">
+                                    {selectedVendor.updatedAt ? formatDate(selectedVendor.updatedAt) : formatDate(selectedVendor.createdAt)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Vendor Details Modal */}
             {showVendorDetails && selectedVendor && (
@@ -527,25 +627,23 @@ const VendorPage = () => {
                                 </div>
                             </div>
 
-                            {/* <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-                                {[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN].includes(userRole) && (
-                                    <button
-                                        onClick={() => {
-                                            setShowVendorDetails(false);
-                                            // handleEditVendor(selectedVendor);
-                                        }}
-                                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                                    >
-                                        Edit Vendor
-                                    </button>
-                                )}
+                            <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+                                <button
+                                    onClick={handlePrintVendor}
+                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center"
+                                >
+                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                    </svg>
+                                    Print
+                                </button>
                                 <button
                                     onClick={() => setShowVendorDetails(false)}
-                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                 >
                                     Close
                                 </button>
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </div>

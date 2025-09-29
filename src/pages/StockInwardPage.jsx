@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserRole, USER_ROLES, getAllStocks } from '../services/coreServices';
+import * as XLSX from 'xlsx';
 
 const StockInwardPage = () => {
     const navigate = useNavigate();
@@ -94,6 +95,44 @@ const StockInwardPage = () => {
     const getProductUnit = useCallback((item) => {
         return item.productId?.unit || 'N/A';
     }, []);
+
+    // Excel Export Function
+    const exportToExcel = useCallback(() => {
+        const worksheetData = filteredStocks.map((stock, index) => ({
+            'S.No.': index + 1,
+            'GRN Number': stock.inwardNumber || 'N/A',
+            'Vendor Name': stock.vendorId?.name || 'N/A',
+            'Vendor Code': stock.vendorId?.vendorCode || 'N/A',
+            'Purchase Order': stock.purchaseOrderId?.poNumber || 'Direct Stock In',
+            'Invoice Number': stock.invoiceNumber || 'N/A',
+            'Received Date': formatDate(stock.inwardDate || stock.createdAt),
+            'Total Amount': calculateTotalAmount(stock.items),
+            'Total Items': stock.items?.length || 0,
+            'GRN ID': stock._id
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Stock Inwards');
+
+        // Add styling through column widths
+        const colWidths = [
+            { wch: 8 },   // S.No.
+            { wch: 20 },  // GRN Number
+            { wch: 25 },  // Vendor Name
+            { wch: 15 },  // Vendor Code
+            { wch: 20 },  // Purchase Order
+            { wch: 20 },  // Invoice Number
+            { wch: 15 },  // Received Date
+            { wch: 15 },  // Total Amount
+            { wch: 12 },  // Total Items
+            { wch: 30 }   // GRN ID
+        ];
+        worksheet['!cols'] = colWidths;
+
+        // Generate Excel file
+        XLSX.writeFile(workbook, `Stock_Inwards_${new Date().toISOString().split('T')[0]}.xlsx`);
+    }, [filteredStocks, formatDate, calculateTotalAmount]);
 
     // Mobile Card View Component
     const StockCard = useCallback(({ stock }) => (
@@ -520,6 +559,22 @@ const StockInwardPage = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
+
+                            {/* Export Excel Button */}
+                            <button
+                                onClick={exportToExcel}
+                                disabled={filteredStocks.length === 0}
+                                className={`px-4 sm:px-6 py-2 rounded-lg transition-all flex items-center justify-center text-sm sm:text-base ${
+                                    filteredStocks.length === 0
+                                        ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                                        : 'bg-green-600 text-white hover:bg-green-700 shadow-lg transform hover:scale-105'
+                                }`}
+                            >
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export Excel
+                            </button>
                            
                             {[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN].includes(userRole) && (
                                 <button

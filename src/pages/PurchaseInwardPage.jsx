@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserRole, USER_ROLES, getPurchaseInwards } from '../services/coreServices';
+import * as XLSX from 'xlsx';
 
 const PurchaseInwardPage = () => {
     const navigate = useNavigate();
@@ -24,12 +25,8 @@ const PurchaseInwardPage = () => {
             setLoading(true);
             setError('');
             const response = await getPurchaseInwards();
-            console.log('Purchases API Response:', response);
-           
             let purchasesData = [];
-           
             if (response?.success && response.data) {
-                // Handle nested data structure from API response
                 if (response.data.data && Array.isArray(response.data.data)) {
                     purchasesData = response.data.data;
                 } else if (Array.isArray(response.data)) {
@@ -42,7 +39,6 @@ const PurchaseInwardPage = () => {
                 setPurchases([]);
                 return;
             }
-           
             setPurchases(purchasesData);
         } catch (error) {
             setError(error.message || 'Failed to fetch purchase inwards');
@@ -97,7 +93,6 @@ const PurchaseInwardPage = () => {
             draft: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
             cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
         };
-       
         return (
             <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusConfig[statusLower] || statusConfig.draft}`}>
                 {statusLower.toUpperCase()}
@@ -116,6 +111,38 @@ const PurchaseInwardPage = () => {
     const getPurchaseOrderNumber = useCallback((purchase) => {
         return purchase.poNumber || purchase.purchaseOrderNumber || 'N/A';
     }, []);
+    const exportToExcel = useCallback(() => {
+        const worksheetData = filteredPurchases.map((purchase, index) => ({
+            'S.No.': index + 1,
+            'Purchase Order #': getPurchaseOrderNumber(purchase),
+            'Vendor Name': purchase.vendorId?.name || 'N/A',
+            'Vendor Code': purchase.vendorId?.vendorCode || 'N/A',
+            'Order Date': formatDate(purchase.createdAt),
+            'Status': purchase.status?.toUpperCase() || 'DRAFT',
+            'Total Amount': calculateTotalAmount(purchase.items),
+            'Total Items': purchase.items?.length || 0,
+            'Order ID': purchase._id
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Purchase Inwards');
+        const colWidths = [
+            { wch: 8 },  // S.No.
+            { wch: 20 }, // Purchase Order #
+            { wch: 25 }, // Vendor Name
+            { wch: 15 }, // Vendor Code
+            { wch: 15 }, // Order Date
+            { wch: 12 }, // Status
+            { wch: 15 }, // Total Amount
+            { wch: 12 }, // Total Items
+            { wch: 30 }  // Order ID
+        ];
+        worksheet['!cols'] = colWidths;
+
+        // Generate Excel file
+        XLSX.writeFile(workbook, `Purchase_Inwards_${new Date().toISOString().split('T')[0]}.xlsx`);
+    }, [filteredPurchases, getPurchaseOrderNumber, formatDate, calculateTotalAmount]);
 
     // Mobile Card View Component
     const PurchaseCard = useCallback(({ purchase }) => (
@@ -417,7 +444,7 @@ const PurchaseInwardPage = () => {
                             </div>
 
                             {/* Additional Information */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6 text-sm">
+                            <div className="grid grid-cols-1 md:grid-col-2 gap-6 border-t pt-6 text-sm">
                                 <div>
                                     <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Order ID</h4>
                                     <p className="font-mono text-gray-600 dark:text-gray-400">{purchase._id}</p>
@@ -532,6 +559,22 @@ const PurchaseInwardPage = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
+
+                            {/* Export Excel Button */}
+                            <button
+                                onClick={exportToExcel}
+                                disabled={filteredPurchases.length === 0}
+                                className={`px-4 sm:px-6 py-2 rounded-lg transition-all flex items-center justify-center text-sm sm:text-base ${
+                                    filteredPurchases.length === 0
+                                        ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                                        : 'bg-green-600 text-white hover:bg-green-700 shadow-lg transform hover:scale-105'
+                                }`}
+                            >
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export Excel
+                            </button>
                            
                             {[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.PURCHASE_MAN].includes(userRole) && (
                                 <button

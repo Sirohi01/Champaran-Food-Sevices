@@ -1,14 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import SpriteIcons from '../../../components/SpriteIcons';
-import { useI18n } from '../../../i18n/i18n';
-import { useTheme } from '../../../contexts/ThemeContext';
 import { getUserData } from '../../../services/coreServices';
 
 const AdminDashboard = () => {
-  const { t } = useI18n();
-  const { isDark } = useTheme();
-  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalProducts: 0,
