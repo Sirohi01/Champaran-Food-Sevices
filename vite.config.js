@@ -16,22 +16,21 @@ export default defineConfig({
     })
   ],
   server: {
-    host: true,               // bind 0.0.0.0
+    host: true,
     port: process.env.PORT || 5173,
     strictPort: true,
-    allowedHosts: 'all',      // allow any host
+    allowedHosts: 'all',
   },
-
   preview: {
-  host: true,
-  port: process.env.PORT || 5173,
-  strictPort: true,
-  allowedHosts: [
-    'dev-champaranfoodservice.onrender.com',
-    'localhost',
-    '127.0.0.1'
-  ],
-},
+    host: true,
+    port: process.env.PORT || 5173,
+    strictPort: true,
+    allowedHosts: [
+      'dev-champaranfoodservice.onrender.com',
+      'localhost',
+      '127.0.0.1'
+    ],
+  },
   build: {
     target: 'esnext',
     minify: 'esbuild',
@@ -39,9 +38,23 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') && !id.includes('react-router-dom')) {
+              return 'vendor-react';
+            }
+            if (id.includes('react-router-dom')) {
+              return 'vendor-router';
+            }
+            if (
+              id.includes('axios') ||
+              id.includes('react-toastify') ||
+              id.includes('xlsx')
+            ) {
+              return 'vendor-libs';
+            }
+            return 'vendor-misc';
+          }
         },
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
