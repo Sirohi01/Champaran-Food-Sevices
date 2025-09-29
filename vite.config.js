@@ -23,11 +23,15 @@ export default defineConfig({
   },
 
   preview: {
-    host: true,
-    port: process.env.PORT || 5173,
-    strictPort: true,
-    allowedHosts: 'all',      // allow any host
-  },
+  host: true,
+  port: process.env.PORT || 5173,
+  strictPort: true,
+  allowedHosts: [
+    'dev-champaranfoodservice.onrender.com',
+    'localhost',
+    '127.0.0.1'
+  ],
+},
   build: {
     target: 'esnext',
     minify: 'esbuild',
