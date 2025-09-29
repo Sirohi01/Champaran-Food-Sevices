@@ -1,5 +1,4 @@
 import { createContext, useContext, useMemo, useState, useEffect } from 'react';
-
 export const Languages = {
   EN: 'en',
   HI: 'hi',
@@ -301,22 +300,36 @@ const translations = {
     },
     userManagement: {
       title: 'उपयोगकर्ता प्रबंधन',
+      addUser: 'उपयोगकर्ता जोड़ें', 
+      editUser: 'उपयोगकर्ता संपादित करें',
       createUser: 'नया उपयोगकर्ता बनाएं',
       fullName: 'पूरा नाम',
       email: 'ईमेल पता',
       phone: 'फ़ोन नंबर',
       role: 'भूमिका',
       store: 'स्टोर',
+      roles: { 
+        admin: 'व्यवस्थापक',
+        manager: 'प्रबंधक',
+        salesPerson: 'विक्रेता',
+        purchaseManager: 'खरीद प्रबंधक',
+        user: 'उपयोगकर्ता',
+        super_admin: 'सुपर व्यवस्थापक'
+      },
       password: 'पासवर्ड',
       confirmPassword: 'पासवर्ड की पुष्टि करें',
       selectRole: 'भूमिका चुनें',
       selectStore: 'स्टोर चुनें',
-      admin: 'व्यवस्थापक',
-      manager: 'प्रबंधक',
-      salesPerson: 'विक्रेता',
-      purchaseManager: 'खरीद प्रबंधक',
-      user: 'उपयोगकर्ता',
-      super_admin: 'सुपर व्यवस्थापक',
+      actions: 'कार्रवाइयाँ', 
+      createSuccess: 'उपयोगकर्ता सफलतापूर्वक बनाया गया!',
+      updateSuccess: 'उपयोगकर्ता सफलतापूर्वक अपडेट किया गया!',
+      deleteSuccess: 'उपयोगकर्ता सफलतापूर्वक हटाया गया!',
+      fetchError: 'उपयोगकर्ताओं को लाने में त्रुटि',
+      passwordsDontMatch: 'पासवर्ड मेल नहीं खाते',
+      errorOccurred: 'एक त्रुटि हुई',
+      confirmDelete: 'क्या आप वाकई इस उपयोगकर्ता को हटाना चाहते हैं?',
+      deleteError: 'उपयोगकर्ता को हटाने में त्रुटि',
+      noUsersFound: 'कोई उपयोगकर्ता नहीं मिला',
       create: 'उपयोगकर्ता बनाएं',
       cancel: 'रद्द करें',
       backToDashboard: 'डैशबोर्ड पर वापस जाएं',
@@ -327,35 +340,6 @@ const translations = {
         passwordMismatch: 'पासवर्ड मेल नहीं खाते',
         passwordLength: 'पासवर्ड कम से कम 6 वर्णों का होना चाहिए'
       }
-    },
-    userManagement: {
-      title: 'User Management',
-      addUser: 'Add User',
-      createUser: 'Create New User',
-      editUser: 'Edit User',
-      fullName: 'Full Name',
-      email: 'Email',
-      role: 'Role',
-      roles: {
-        admin: 'Admin',
-        manager: 'Manager',
-        salesPerson: 'Sales Person',
-        purchaseManager: 'Purchase Manager',
-        user: 'User',
-        super_admin: 'Super Admin'
-      },
-      password: 'Password',
-      confirmPassword: 'Confirm Password',
-      actions: 'Actions',
-      createSuccess: 'User created successfully!',
-      updateSuccess: 'User updated successfully!',
-      deleteSuccess: 'User deleted successfully!',
-      fetchError: 'Error fetching users',
-      passwordsDontMatch: 'Passwords do not match',
-      errorOccurred: 'An error occurred',
-      confirmDelete: 'Are you sure you want to delete this user?',
-      deleteError: 'Error deleting user',
-      noUsersFound: 'No users found'
     },
     storeManagement: {
       title: 'स्टोर प्रबंधन',
@@ -573,22 +557,36 @@ const translations = {
     },
     userManagement: {
       title: 'ব্যবহারকারী ব্যবস্থাপনা',
+      addUser: 'Add User', 
+      editUser: 'Edit User',
       createUser: 'নতুন ব্যবহারকারী তৈরি করুন',
       fullName: 'পুরো নাম',
       email: 'ইমেল ঠিকানা',
       phone: 'ফোন নম্বর',
       role: 'ভূমিকা',
       store: 'স্টোর',
+      roles: {
+        admin: 'অ্যাডমিন',
+        manager: 'ম্যানেজার',
+        salesPerson: 'বিক্রয়কর্মী',
+        purchaseManager: 'ক্রয় ব্যবস্থাপক',
+        user: 'ব্যবহারকারী',
+        super_admin: 'সুপার অ্যাডমিন',
+      },
       password: 'পাসওয়ার্ড',
       confirmPassword: 'পাসওয়ার্ড নিশ্চিত করুন',
       selectRole: 'ভূমিকা নির্বাচন করুন',
       selectStore: 'স্টোর নির্বাচন করুন',
-      admin: 'অ্যাডমিন',
-      manager: 'ম্যানেজার',
-      salesPerson: 'বিক্রয়কর্মী',
-      purchaseManager: 'ক্রয় ব্যবস্থাপক',
-      user: 'ব্যবহারকারী',
-      super_admin: 'সুপার অ্যাডমিন',
+      actions: 'Actions',
+      createSuccess: 'User created successfully!',
+      updateSuccess: 'User updated successfully!',
+      deleteSuccess: 'User deleted successfully!',
+      fetchError: 'Error fetching users',
+      passwordsDontMatch: 'Passwords do not match',
+      errorOccurred: 'An error occurred',
+      confirmDelete: 'Are you sure you want to delete this user?',
+      deleteError: 'Error deleting user',
+      noUsersFound: 'No users found',
       create: 'ব্যবহারকারী তৈরি করুন',
       cancel: 'বাতিল করুন',
       backToDashboard: 'ড্যাশবোর্ডে ফিরে যান',
@@ -599,35 +597,6 @@ const translations = {
         passwordMismatch: 'পাসওয়ার্ড মেলে নি',
         passwordLength: 'পাসওয়ার্ড কমপক্ষে 6 অক্ষরের হতে হবে'
       }
-    },
-    userManagement: {
-      title: 'User Management',
-      addUser: 'Add User',
-      createUser: 'Create New User',
-      editUser: 'Edit User',
-      fullName: 'Full Name',
-      email: 'Email',
-      role: 'Role',
-      roles: {
-        admin: 'Admin',
-        manager: 'Manager',
-        salesPerson: 'Sales Person',
-        purchaseManager: 'Purchase Manager',
-        user: 'User',
-        super_admin: 'Super Admin'
-      },
-      password: 'Password',
-      confirmPassword: 'Confirm Password',
-      actions: 'Actions',
-      createSuccess: 'User created successfully!',
-      updateSuccess: 'User updated successfully!',
-      deleteSuccess: 'User deleted successfully!',
-      fetchError: 'Error fetching users',
-      passwordsDontMatch: 'Passwords do not match',
-      errorOccurred: 'An error occurred',
-      confirmDelete: 'Are you sure you want to delete this user?',
-      deleteError: 'Error deleting user',
-      noUsersFound: 'No users found'
     },
     storeManagement: {
       title: 'স্টোর ব্যবস্থাপনা',
@@ -709,6 +678,17 @@ const translations = {
       flourAtta: 'আটা',
       spicesMasala: 'মসলা',
       pulsesDal: 'ডাল',
+      bulkSupply: 'বাল্ক সরবরাহ',
+      freshWholesale: 'Fresh Wholesale',
+      bulkContainers: 'Bulk Containers',
+      wholesaleSacks: 'Wholesale Sacks',
+      bulkPackets: 'Bulk Packets',
+      todaysFreshPicks: "Today's Fresh Picks",
+      todaysFreshPicksSubtitle: "Today's fresh and best products",
+      freshApples: 'Fresh Apples',
+      carrots: 'Carrots',
+      freshMilk: 'Fresh Milk',
+      wheatBread: 'Wheat Bread',
     },
     offers: {
       badge: 'পাইকারী মূল্য',
@@ -720,20 +700,68 @@ const translations = {
       cookingOilDesc: '15L+ কন্টেইনারে অতিরিক্ত ছাড়',
       creditTerms: 'ক্রেডিট শর্ত',
       creditTermsDesc: 'নিবন্ধিত অংশীদারদের জন্য ৩০ দিনের ক্রেডিট',
+      validTill: 'Valid Till',
+      code: 'Code',
+      thisMonth: 'This Month',
+      ongoing: 'Ongoing',
+      always: 'Always',
+      bulkDeals: 'Bulk Deals',
+      bulkDealsSubtitle: 'Special rates in wholesale quantity',
+      b2bOnly: 'B2B Only!',
+      wholesalePricing: 'Wholesale Pricing',
+      endsIn: 'Ends in',
+      becomePartner: 'Become Our Business Partner!',
+      becomePartnerDesc: 'Register to get wholesale rates and special credit terms for your store',
     },
     services: {
       badge: 'আমাদের সাথে অংশীদারিত্ব কেন',
       title: 'চম্পারণ ফুডস কেন বেছে নিবেন?',
       subtitle: 'আমাদের B2B সেবা আপনার মুদিখানা ব্যবসা বাড়াতে সাহায্য করে। পাইকারী দর, বাল্ক সরবরাহ এবং নির্ভরযোগ্য সেবা।',
       bulkSupplyTitle: 'বাল্ক সরবরাহ',
+      bulkSupplyDesc: 'Large quantity delivery for your store. Fast delivery in bulk quantity for your store.',
       wholesaleRatesTitle: 'পাইকারী দর',
+      wholesaleRatesDesc: 'Best wholesale prices for retailers. Best wholesale prices for retailers.',
       b2bSupportTitle: 'B2B সহায়তা',
+      b2bSupportDesc: 'Dedicated business support team. Dedicated support team for your business.',
+      bulkDelivery: 'Bulk Delivery',
+      scheduledSupply: 'Scheduled Supply',
+      storeDirect: 'Store Direct',
+      wholesalePricing: 'Wholesale Pricing',
+      volumeDiscounts: 'Volume Discounts',
+      creditTerms: 'Credit Terms',
+      businessAccount: 'Business Account',
+      b2bSupport24x7: '24/7 B2B Support',
+      orderManagement: 'Order Management',
+      successInNumbers: 'Our Success in Numbers',
+      successInNumbersSubtitle: 'The story of our success in numbers',
+      partnerStores: 'Partner Stores',
+      bulkProducts: 'Bulk Products',
+      yearsExperience: 'Years Experience',
+      businessSatisfaction: 'Business Satisfaction',
+      testimonial: 'Taking wholesale supply from champaaran foods is very beneficial. Quality is good and rates are also excellent in wholesale. Perfect supplier for our store!',
+      testimonialAuthor: 'Rajesh Kumar',
+      testimonialRole: 'Grocery Store Owner',
     },
     footer: {
       companyDesc: 'ছোট ও বড় মুদিখানার দোকানের জন্য পাইকারী দরে মানসম্পন্ন পণ্য। চম্পারণ ফুডসের সাথে আপনার ব্যবসা বাড়ান।',
       quickLinks: 'দ্রুত লিঙ্ক',
       categories: 'বিভাগ',
       support: 'সহায়তা',
+      downloadApp: 'Download App',
+      downloadAppStore: 'Download on App Store',
+      downloadGooglePlay: 'Get it on Google Play',
+      businessUpdates: 'Business Updates!',
+      businessUpdatesDesc: 'Get wholesale rates and bulk pricing updates for your business',
+      followUs: 'Follow us:',
+      weAccept: 'We accept:',
+      allRightsReserved: '© 2024 champaaran foods Wholesale Supplier. All rights reserved.',
+      madeWithLove: 'Made with ❤️ in India',
+      version: 'Version 1.0',
+      privacyPolicy: 'Privacy Policy',
+      termsConditions: 'Terms & Conditions',
+      returnPolicy: 'Return Policy',
+      shippingPolicy: 'Shipping Policy',
+      faq: 'FAQ',
     }
   },
   gu: {
@@ -786,22 +814,36 @@ const translations = {
     },
     userManagement: {
       title: 'વપરાશકર્તા વ્યવસ્થાપન',
+      addUser: 'Add User',
+      editUser: 'Edit User',
       createUser: 'નવો વપરાશકર્તા બનાવો',
       fullName: 'પૂરું નામ',
       email: 'ઈમેલ સરનામું',
       phone: 'ફોન નંબર',
       role: 'ભૂમિકા',
       store: 'સ્ટોર',
+      roles: {
+        admin: 'એડમિન',
+        manager: 'મેનેજર',
+        salesPerson: 'વેચાણકર્તા',
+        purchaseManager: 'ખરીદી મેનેજર',
+        user: 'વપરાશકર્તા',
+        super_admin: 'સુપર એડમિન'
+      },
       password: 'પાસવર્ડ',
       confirmPassword: 'પાસવર્ડની પુષ્ટિ કરો',
       selectRole: 'ભૂમિકા પસંદ કરો',
       selectStore: 'સ્ટોર પસંદ કરો',
-      admin: 'એડમિન',
-      manager: 'મેનેજર',
-      salesPerson: 'વેચાણકર્તા',
-      purchaseManager: 'ખરીદી મેનેજર',
-      user: 'વપરાશકર્તા',
-      super_admin: 'સુપર એડમિન',
+      actions: 'Actions',
+      createSuccess: 'User created successfully!',
+      updateSuccess: 'User updated successfully!',
+      deleteSuccess: 'User deleted successfully!',
+      fetchError: 'Error fetching users',
+      passwordsDontMatch: 'Passwords do not match',
+      errorOccurred: 'An error occurred',
+      confirmDelete: 'Are you sure you want to delete this user?',
+      deleteError: 'Error deleting user',
+      noUsersFound: 'No users found',
       create: 'વપરાશકર્તા બનાવો',
       cancel: 'રદ કરો',
       backToDashboard: 'ડેશબોર્ડ પર પાછા જાઓ',
@@ -812,35 +854,6 @@ const translations = {
         passwordMismatch: 'પાસવર્ડ મેળ ખાતા નથી',
         passwordLength: 'પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરનો હોવો જોઈએ'
       }
-    },
-    userManagement: {
-      title: 'User Management',
-      addUser: 'Add User',
-      createUser: 'Create New User',
-      editUser: 'Edit User',
-      fullName: 'Full Name',
-      email: 'Email',
-      role: 'Role',
-      roles: {
-        admin: 'Admin',
-        manager: 'Manager',
-        salesPerson: 'Sales Person',
-        purchaseManager: 'Purchase Manager',
-        user: 'User',
-        super_admin: 'Super Admin'
-      },
-      password: 'Password',
-      confirmPassword: 'Confirm Password',
-      actions: 'Actions',
-      createSuccess: 'User created successfully!',
-      updateSuccess: 'User updated successfully!',
-      deleteSuccess: 'User deleted successfully!',
-      fetchError: 'Error fetching users',
-      passwordsDontMatch: 'Passwords do not match',
-      errorOccurred: 'An error occurred',
-      confirmDelete: 'Are you sure you want to delete this user?',
-      deleteError: 'Error deleting user',
-      noUsersFound: 'No users found'
     },
     storeManagement: {
       title: 'સ્ટોર વ્યવસ્થાપન',
@@ -922,51 +935,131 @@ const translations = {
       flourAtta: 'લોટ',
       spicesMasala: 'મસાલા',
       pulsesDal: 'દાળ',
+      bulkSupply: 'Bulk Supply',
+      freshWholesale: 'Fresh Wholesale',
+      bulkContainers: 'Bulk Containers',
+      wholesaleSacks: 'Wholesale Sacks',
+      bulkPackets: 'Bulk Packets',
+      todaysFreshPicks: "Today's Fresh Picks",
+      todaysFreshPicksSubtitle: "Today's fresh and best products",
+      freshApples: 'Fresh Apples',
+      carrots: 'Carrots',
+      freshMilk: 'Fresh Milk',
+      wheatBread: 'Wheat Bread',
     },
     offers: {
       badge: 'થોક ભાવ',
       title: 'થોક બલ્ક રેટ',
       subtitle: 'બલ્ક જથ્થામાં ઓર્ડર કરો અને શ્રેષ્ઠ થોક ભાવ મેળવો। વધુ જથ્થો, ઓછી કિંમત।',
+      bulkRiceGrains: 'Bulk Rice & Grains',
+      bulkRiceDesc: 'Special wholesale rates on 25kg+ bags',
+      volumeDiscount: 'Volume Discount',
+      cookingOilDesc: 'Extra discount on 15L+ containers',
+      creditTerms: 'Credit Terms',
+      creditTermsDesc: '30 days credit for registered partners',
+      validTill: 'Valid Till',
+      code: 'Code',
+      thisMonth: 'This Month',
+      ongoing: 'Ongoing',
+      always: 'Always',
+      bulkDeals: 'Bulk Deals',
+      bulkDealsSubtitle: 'Special rates in wholesale quantity',
+      b2bOnly: 'B2B Only!',
+      wholesalePricing: 'Wholesale Pricing',
+      endsIn: 'Ends in',
+      becomePartner: 'Become Our Business Partner!',
+      becomePartnerDesc: 'Register to get wholesale rates and special credit terms for your store',
     },
     services: {
       badge: 'અમારી સાથે ભાગીદારી કેમ',
       title: 'ચંપારણ ફૂડ્સ કેમ પસંદ કરો?',
       subtitle: 'અમારી B2B સેવાઓ તમારા કરિયાણા વ્યવસાયને વધારવામાં મદદ કરે છે। થોક ભાવ, બલ્ક સપ્લાય અને વિશ્વસનીય સેવા।',
+      bulkSupplyTitle: 'બલ્ક સપ્લાય',
+      bulkSupplyDesc: 'Large quantity delivery for your store. Fast delivery in bulk quantity for your store.',
+      wholesaleRatesTitle: 'થોક ભાવ',
+      wholesaleRatesDesc: 'Best wholesale prices for retailers. Best wholesale prices for retailers.',
+      b2bSupportTitle: 'B2B સેવા',
+      b2bSupportDesc: 'Dedicated business support team. Dedicated support team for your business.',
+      bulkDelivery: 'Bulk Delivery',
+      scheduledSupply: 'Scheduled Supply',
+      storeDirect: 'Store Direct',
+      wholesalePricing: 'Wholesale Pricing',
+      volumeDiscounts: 'Volume Discounts',
+      creditTerms: 'Credit Terms',
+      businessAccount: 'Business Account',
+      b2bSupport24x7: '24/7 B2B Support',
+      orderManagement: 'Order Management',
+      successInNumbers: 'Our Success in Numbers',
+      successInNumbersSubtitle: 'The story of our success in numbers',
+      partnerStores: 'Partner Stores',
+      bulkProducts: 'Bulk Products',
+      yearsExperience: 'Years Experience',
+      businessSatisfaction: 'Business Satisfaction',
+      testimonial: 'Taking wholesale supply from champaaran foods is very beneficial. Quality is good and rates are also excellent in wholesale. Perfect supplier for our store!',
+      testimonialAuthor: 'Rajesh Kumar',
+      testimonialRole: 'Grocery Store Owner',
     },
     footer: {
       companyDesc: 'નાના અને મોટા કરિયાણા સ્ટોર માટે થોક ભાવે ગુણવત્તાયુક્ત ઉત્પાદનો। ચંપારણ ફૂડ્સ સાથે તમારો વ્યવસાય વધારો।',
       quickLinks: 'ઝડપી લિંક્સ',
       categories: 'શ્રેણીઓ',
       support: 'સપોર્ટ',
+      downloadApp: 'Download App',
+      downloadAppStore: 'Download on App Store',
+      downloadGooglePlay: 'Get it on Google Play',
+      businessUpdates: 'Business Updates!',
+      businessUpdatesDesc: 'Get wholesale rates and bulk pricing updates for your business',
+      followUs: 'Follow us:',
+      weAccept: 'We accept:',
+      allRightsReserved: '© 2024 champaaran foods Wholesale Supplier. All rights reserved.',
+      madeWithLove: 'Made with ❤️ in India',
+      version: 'Version 1.0',
+      privacyPolicy: 'Privacy Policy',
+      termsConditions: 'Terms & Conditions',
+      returnPolicy: 'Return Policy',
+      shippingPolicy: 'Shipping Policy',
+      faq: 'FAQ',
     }
   }
 };
-
-// Enhanced translation function with interpolation support
 const I18nContext = createContext({ lang: defaultLang, setLang: () => {}, t: (k) => k });
 
 export const I18nProvider = ({ children }) => {
   const [lang, setLang] = useState(defaultLang);
-
   useEffect(() => {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('lang') : null;
-    if (stored && translations[stored]) setLang(stored);
+    try {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('lang') : null;
+      if (stored && translations[stored]) setLang(stored);
+    } catch (error) {
+      console.error("Error accessing localStorage for language:", error);
+    }
   }, []);
-
   useEffect(() => {
-    if (typeof window !== 'undefined') localStorage.setItem('lang', lang);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('lang', lang);
+      } catch (error) {
+        console.error("Error setting language in localStorage:", error);
+      }
+    }
   }, [lang]);
-
   const t = useMemo(() => {
     return (key, interpolations = {}) => {
       const parts = key.split('.');
       let node = translations[lang] || translations[defaultLang];
+
       for (const p of parts) {
         node = node?.[p];
+        if (node === undefined) {
+          let fallbackNode = translations[defaultLang];
+          for (const fbPart of parts) {
+            fallbackNode = fallbackNode?.[fbPart];
+          }
+          return typeof fallbackNode === 'string' ? fallbackNode : key;
+        }
       }
       
       if (typeof node === 'string') {
-        // Handle interpolations like {{name}}, {{count}}
         return node.replace(/\{\{(\w+)\}\}/g, (match, variable) => {
           return interpolations[variable] !== undefined ? interpolations[variable] : match;
         });
