@@ -15,6 +15,7 @@ const StoresPage = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editFormData, setEditFormData] = useState({});
     const [updating, setUpdating] = useState(false);
+    const [exporting, setExporting] = useState(false);
 
     const canViewStores = [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN].includes(userRole);
 
@@ -46,7 +47,6 @@ const StoresPage = () => {
             setLoading(true);
             setError('');
             const response = await getStores();
-            //console.log('Stores API Response:', response);
             
             let storesData = [];
             
@@ -88,24 +88,188 @@ const StoresPage = () => {
         });
     };
 
-    // Handle store details view
-    // const handleViewStore = async (storeId) => {
-    //     try {
-    //         setLoading(true);
-    //         const storeDetails = await getStoreById(storeId);
-    //         setSelectedStore(storeDetails);
-    //         setShowStoreDetails(true);
-    //     } catch (error) {
-    //         setError('Failed to fetch store details');
-    //         console.error('Error fetching store details:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
+    // Export to Excel functionality
+    const exportToExcel = async () => {
+        try {
+            setExporting(true);
+            
+            // Import xlsx library dynamically
+            const XLSX = await import('xlsx');
+            
+            // Prepare data for Excel
+            const excelData = filteredStores.map(store => ({
+                'Store Name': store.name,
+                'Store Code': store.storeCode,
+                'Company': store.companyName || 'Champaran Food Company',
+                'Street': store.address.street,
+                'City': store.address.city,
+                'State': store.address.state,
+                'ZIP Code': store.address.zipCode,
+                'Country': store.address.country || 'India',
+                'Phone': store.contactInfo?.phone || '',
+                'Email': store.contactInfo?.email || '',
+                'Status': store.isActive ? 'Active' : 'Inactive',
+                'Created Date': formatDate(store.createdAt),
+                'Last Updated': formatDate(store.updatedAt)
+            }));
 
-    // const handleViewStore = () => {
-    //         navigate('/dashboard/admin');
-    //     };
+            // Create workbook and worksheet
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.json_to_sheet(excelData);
+            
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Stores');
+            
+            // Generate Excel file and download
+            const fileName = `Stores_Export_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(workbook, fileName);
+            
+        } catch (error) {
+            console.error('Error exporting to Excel:', error);
+            setError('Failed to export to Excel');
+        } finally {
+            setExporting(false);
+        }
+    };
+
+    // Print functionality
+    const handlePrint = () => {
+        const printContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Stores Report</title>
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 20px; 
+                        color: #333;
+                    }
+                    .header { 
+                        text-align: center; 
+                        margin-bottom: 30px;
+                        border-bottom: 2px solid #333;
+                        padding-bottom: 10px;
+                    }
+                    .header h1 { 
+                        margin: 0; 
+                        color: #2c5282;
+                    }
+                    .summary {
+                        background: #f7fafc;
+                        padding: 15px;
+                        border-radius: 5px;
+                        margin-bottom: 20px;
+                        border-left: 4px solid #2c5282;
+                    }
+                    table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        margin-top: 20px;
+                    }
+                    th { 
+                        background-color: #2c5282; 
+                        color: white; 
+                        padding: 12px; 
+                        text-align: left;
+                        border: 1px solid #ddd;
+                    }
+                    td { 
+                        padding: 10px; 
+                        border: 1px solid #ddd;
+                    }
+                    tr:nth-child(even) {
+                        background-color: #f8f9fa;
+                    }
+                    .status-active { 
+                        color: #38a169; 
+                        font-weight: bold;
+                    }
+                    .status-inactive { 
+                        color: #e53e3e; 
+                        font-weight: bold;
+                    }
+                    .footer {
+                        margin-top: 30px;
+                        text-align: center;
+                        font-size: 12px;
+                        color: #666;
+                        border-top: 1px solid #ddd;
+                        padding-top: 10px;
+                    }
+                    @media print {
+                        body { margin: 0; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>Stores Report</h1>
+                    <p>Generated on ${new Date().toLocaleDateString('en-IN')}</p>
+                </div>
+                
+                <div class="summary">
+                    <strong>Report Summary:</strong><br>
+                    Total Stores: ${stores.length}<br>
+                    Filtered Stores: ${filteredStores.length}<br>
+                    ${searchTerm ? `Search Term: "${searchTerm}"` : ''}
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Store Name</th>
+                            <th>Store Code</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Created Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredStores.map(store => `
+                            <tr>
+                                <td>${store.name}</td>
+                                <td>${store.storeCode}</td>
+                                <td>${store.address.street}</td>
+                                <td>${store.address.city}</td>
+                                <td>${store.address.state}</td>
+                                <td>${store.contactInfo?.phone || 'N/A'}</td>
+                                <td>${store.contactInfo?.email || 'N/A'}</td>
+                                <td class="${store.isActive ? 'status-active' : 'status-inactive'}">
+                                    ${store.isActive ? 'Active' : 'Inactive'}
+                                </td>
+                                <td>${formatDate(store.createdAt)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+
+                <div class="footer">
+                    <p>Generated by Champaran Food Company Store Management System</p>
+                </div>
+
+                <script>
+                    window.onload = function() {
+                        window.print();
+                        setTimeout(function() {
+                            window.close();
+                        }, 1000);
+                    }
+                </script>
+            </body>
+            </html>
+        `;
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+    };
+
     // Handle edit store
     const handleEditStore = (store) => {
         setEditFormData({
@@ -135,7 +299,6 @@ const StoresPage = () => {
         try {
             setUpdating(true);
             const response = await updateStore(editFormData._id, editFormData);
-            //console.log('Store updated:', response);
             
             // Refresh stores list
             await fetchStores();
@@ -156,7 +319,6 @@ const StoresPage = () => {
             setUpdating(true);
             const updatedData = { isActive: !currentStatus };
             const response = await updateStore(storeId, updatedData);
-            //console.log('Store status updated:', response);
             
             // Refresh stores list
             await fetchStores();
@@ -273,17 +435,44 @@ const StoresPage = () => {
                                 </svg>
                             </div>
                             
-                            {userRole === USER_ROLES.SUPER_ADMIN && (
+                            {/* Action Buttons */}
+                            <div className="flex gap-2">
+                                {/* Export to Excel Button */}
                                 <button
-                                    onClick={() => navigate('/dashboard/create-store')}
-                                    className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 dark:hover:from-orange-600 dark:hover:to-red-700 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center"
+                                    onClick={exportToExcel}
+                                    disabled={exporting || filteredStores.length === 0}
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                                 >
                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    Add Store
+                                    {exporting ? 'Exporting...' : 'Excel'}
                                 </button>
-                            )}
+
+                                {/* Print Button */}
+                                <button
+                                    onClick={handlePrint}
+                                    disabled={filteredStores.length === 0}
+                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                                >
+                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                    </svg>
+                                    Print
+                                </button>
+
+                                {userRole === USER_ROLES.SUPER_ADMIN && (
+                                    <button
+                                        onClick={() => navigate('/dashboard/create-store')}
+                                        className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 dark:hover:from-orange-600 dark:hover:to-red-700 transition-all shadow-lg transform hover:scale-105 flex items-center justify-center"
+                                    >
+                                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        Add Store
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,7 +497,9 @@ const StoresPage = () => {
                     </div>
                 )}
 
-                {/* Stores Grid */}
+                {/* Stores Grid - Rest of the component remains the same */}
+                {/* ... (previous stores grid code) ... */}
+                
                 {filteredStores.length === 0 ? (
                     <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-xl border border-blue-200 dark:border-gray-700 p-12 text-center">
                         <svg className="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -425,13 +616,6 @@ const StoresPage = () => {
                                         
                                         {/* Action Buttons */}
                                         <div className="flex gap-2">
-                                            {/* <button
-                                                onClick={() => handleViewStore(store._id)}
-                                                className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-                                            >
-                                                View
-                                            </button> */}
-                                            
                                             {userRole === USER_ROLES.SUPER_ADMIN && (
                                                 <>
                                                     <button
@@ -461,148 +645,6 @@ const StoresPage = () => {
                         </div>
                     </>
                 )}
-            </div>
-
-            {/* Store Details Modal */}
-            {showStoreDetails && selectedStore && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="p-6">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                                    Store Details
-                                </h2>
-                                <button
-                                    onClick={() => setShowStoreDetails(false)}
-                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                                >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div className="space-y-6">
-                                {/* Store Header */}
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                                        {selectedStore.name.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                                            {selectedStore.name}
-                                        </h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            {selectedStore.companyName}
-                                        </p>
-                                        <div className="flex items-center mt-1">
-                                            <div className={`w-3 h-3 rounded-full mr-2 ${selectedStore.isActive ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                            <span className={`text-sm font-medium ${selectedStore.isActive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                                                {selectedStore.isActive ? 'Active' : 'Inactive'}
-                                            </span>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400 ml-3">
-                                                Code: {selectedStore.storeCode}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Store Information */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Contact Information</h4>
-                                        <div className="space-y-3">
-                                            <div className="flex items-center">
-                                                <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                </svg>
-                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.contactInfo?.email}</span>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                                </svg>
-                                                <span className="text-gray-600 dark:text-gray-400">{selectedStore.contactInfo?.phone}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Address</h4>
-                                        <div className="flex items-start">
-                                            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            </svg>
-                                            <div className="text-gray-600 dark:text-gray-400">
-                                                <p>{selectedStore.address.street}</p>
-                                                <p>{selectedStore.address.city}, {selectedStore.address.state}</p>
-                                                <p>{selectedStore.address.zipCode}, {selectedStore.address.country}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Store Stats */}
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">Store Information</h4>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">Created</p>
-                                            <p className="font-semibold text-gray-800 dark:text-gray-200">{formatDate(selectedStore.createdAt)}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">Last Updated</p>
-                                            <p className="font-semibold text-gray-800 dark:text-gray-200">{formatDate(selectedStore.updatedAt)}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
-                                            <p className={`font-semibold ${selectedStore.isActive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                                                {selectedStore.isActive ? 'Active' : 'Inactive'}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">Store Code</p>
-                                            <p className="font-semibold text-gray-800 dark:text-gray-200">{selectedStore.storeCode}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-                                {userRole === USER_ROLES.SUPER_ADMIN && (
-                                    <>
-                                        <button
-                                            onClick={() => {
-                                                setShowStoreDetails(false);
-                                                handleEditStore(selectedStore);
-                                            }}
-                                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                                        >
-                                            Edit Store
-                                        </button>
-                                        <button
-                                            onClick={() => handleToggleStoreStatus(selectedStore._id, selectedStore.isActive)}
-                                            className={`px-4 py-2 rounded-lg transition-colors ${
-                                                selectedStore.isActive 
-                                                    ? 'bg-red-600 hover:bg-red-700 text-white' 
-                                                    : 'bg-green-600 hover:bg-green-700 text-white'
-                                            }`}
-                                        >
-                                            {selectedStore.isActive ? 'Deactivate' : 'Activate'}
-                                        </button>
-                                    </>
-                                )}
-                                <button
-                                    onClick={() => setShowStoreDetails(false)}
-                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {/* Edit Store Modal */}
             {showEditModal && (
@@ -789,6 +831,7 @@ const StoresPage = () => {
                     </div>
                 </div>
             )}
+         </div>
         </div>
     );
 };

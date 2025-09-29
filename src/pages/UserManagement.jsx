@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUsers, USER_ROLES, getRoleDisplayName } from '../services/coreServices';
 import SpriteIcons from '../components/SpriteIcons';
 import CreateUserModal from '../components/CreateUserModal';
+import * as XLSX from 'xlsx';
 
 const UserManagement = () => {  
   const navigate = useNavigate();
@@ -37,6 +38,51 @@ const UserManagement = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Excel Export Function
+  const exportToExcel = () => {
+    const worksheetData = filteredUsers.map((user, index) => ({
+      'S.No.': index + 1,
+      'User Name': user.name || 'N/A',
+      'Email': user.email || 'N/A',
+      'Phone': user.phone || 'N/A',
+      'Role': getRoleDisplayName(user.role),
+      'Status': 'Active',
+      'User ID': user._id || user.id || 'N/A',
+      'Created Date': user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN') : 'N/A'
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+
+    // Add styling through column widths
+    const colWidths = [
+      { wch: 8 },   // S.No.
+      { wch: 20 },  // User Name
+      { wch: 25 },  // Email
+      { wch: 15 },  // Phone
+      { wch: 15 },  // Role
+      { wch: 12 },  // Status
+      { wch: 25 },  // User ID
+      { wch: 15 }   // Created Date
+    ];
+    worksheet['!cols'] = colWidths;
+
+    // Generate Excel file
+    XLSX.writeFile(workbook, `Users_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
+
+  // Print Function
+  const handlePrint = () => {
+    const printContent = document.getElementById('print-users-content');
+    const originalContents = document.body.innerHTML;
+    
+    document.body.innerHTML = printContent.innerHTML;
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload();
   };
 
   const handleCreateUserSuccess = () => {
@@ -106,6 +152,76 @@ const UserManagement = () => {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
+      {/* Print Content */}
+      <div id="print-users-content" className="hidden">
+        <div className="p-8 bg-white" style={{ fontFamily: 'Arial, sans-serif' }}>
+          <div className="text-center border-b-2 border-gray-300 pb-4 mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">USER MANAGEMENT REPORT</h1>
+            <p className="text-gray-600">Generated on {new Date().toLocaleDateString('en-IN')}</p>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Users Summary</h3>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="bg-gray-50 p-3 rounded border">
+                <div className="text-sm font-semibold text-gray-700">Total Users</div>
+                <div className="text-xl font-bold text-blue-600">{users.length}</div>
+              </div>
+              <div className="bg-gray-50 p-3 rounded border">
+                <div className="text-sm font-semibold text-gray-700">Filtered Users</div>
+                <div className="text-xl font-bold text-green-600">{filteredUsers.length}</div>
+              </div>
+              <div className="bg-gray-50 p-3 rounded border">
+                <div className="text-sm font-semibold text-gray-700">Generated Date</div>
+                <div className="text-lg font-bold text-gray-600">{new Date().toLocaleDateString('en-IN')}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Users List</h3>
+            <table className="w-full border border-gray-300">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-sm">S.No.</th>
+                  <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-sm">User Name</th>
+                  <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-sm">Email</th>
+                  <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-sm">Phone</th>
+                  <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-sm">Role</th>
+                  <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-sm">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user, index) => (
+                  <tr key={user._id || user.id}>
+                    <td className="border border-gray-300 px-3 py-2 text-center text-sm">{index + 1}</td>
+                    <td className="border border-gray-300 px-3 py-2 text-sm">{user.name || 'N/A'}</td>
+                    <td className="border border-gray-300 px-3 py-2 text-sm">{user.email || 'N/A'}</td>
+                    <td className="border border-gray-300 px-3 py-2 text-sm">{user.phone || 'N/A'}</td>
+                    <td className="border border-gray-300 px-3 py-2 text-sm">{getRoleDisplayName(user.role)}</td>
+                    <td className="border border-gray-300 px-3 py-2 text-sm">Active</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6 border-t pt-6 text-sm">
+            <div>
+              <h4 className="font-semibold text-gray-700 mb-1">Report Filters</h4>
+              <p className="text-gray-600">
+                {searchTerm && `Search: "${searchTerm}"`} {roleFilter && `Role: ${roleOptions.find(r => r.value === roleFilter)?.label}`}
+                {!searchTerm && !roleFilter && 'No filters applied'}
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-700 mb-1">Total Records</h4>
+              <p className="text-gray-600">{filteredUsers.length} users</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
@@ -122,13 +238,33 @@ const UserManagement = () => {
         </div>
         
         <div className="flex gap-3 flex-wrap">
-          {/* <button
-            onClick={() => setShowCreateModal(true)}
-            className="group flex-shrink-0 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-orange-500 dark:to-red-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 dark:hover:from-orange-600 dark:hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl px-4 py-3 flex items-center justify-center gap-2 font-medium text-sm"
+          {/* Export Excel Button */}
+          <button
+            onClick={exportToExcel}
+            disabled={filteredUsers.length === 0}
+            className={`group flex-shrink-0 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl px-4 py-3 flex items-center justify-center gap-2 font-medium text-sm ${
+              filteredUsers.length === 0
+                ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                : 'bg-green-500 hover:bg-green-600 text-white'
+            }`}
           >
-            <SpriteIcons name="user-plus" className="w-4 h-4 transition-transform group-hover:scale-110" />
-            <span>Create User (Modal)</span>
-          </button> */}
+            <SpriteIcons name="download" className="w-4 h-4 transition-transform group-hover:scale-110" />
+            <span>Export Excel</span>
+          </button>
+
+          {/* Print Button */}
+          <button
+            onClick={handlePrint}
+            disabled={filteredUsers.length === 0}
+            className={`group flex-shrink-0 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl px-4 py-3 flex items-center justify-center gap-2 font-medium text-sm ${
+              filteredUsers.length === 0
+                ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                : 'bg-blue-500 hover:bg-blue-600 text-white'
+            }`}
+          >
+            <SpriteIcons name="printer" className="w-4 h-4 transition-transform group-hover:scale-110" />
+            <span>Print</span>
+          </button>
           
           <button
             onClick={handleCreateUserRoute}

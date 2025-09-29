@@ -1,17 +1,13 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import DashboardHeader from '../components/DashboardHeader';
 import SideMenu from '../components/SideMenu';
 import { useI18n } from '../i18n/i18n';
-import { useTheme } from '../contexts/ThemeContext';
 import { logoutUser } from '../services/coreServices';
 
 const PrivateLayout = () => {
-  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t } = useI18n();
-  const { isDark } = useTheme();
-
   const handleLogout = () => {
     logoutUser();
   };
@@ -21,7 +17,7 @@ const PrivateLayout = () => {
       <DashboardHeader onToggleSidebar={() => setMobileOpen(!mobileOpen)} onLogout={handleLogout} />
       <div className="flex flex-1">
         <SideMenu />
-        <main className="flex-1 p-6 bg-transparent text-gray-800 dark:text-gray-200">
+        <main className="flex-1 p-1 sm:p-0 bg-transparent text-gray-800 dark:text-gray-200">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
