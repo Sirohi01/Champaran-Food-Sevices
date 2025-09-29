@@ -28,7 +28,7 @@ const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ContactPage = lazy(() => import('../pages/ContactPage'));
 const VendorPage = lazy(() => import('../pages/VendorPage'));
 const CreateVendor = lazy(() => import('../pages/CreateVendor'));
-const CreatePurchaseInward = lazy(() => import('../pages/createPurchaseInward'));
+const CreatePurchaseInward = lazy(() => import('../pages/CreatePurchaseInward'));
 const PurchaseInwardPage =  lazy(() => import('../pages/PurchaseInwardPage'));
 const CreateStockInward =  lazy(() => import('../pages/CreateStockInward'));
 const StockInwardPage =  lazy(() => import('../pages/StockInwardPage'));
