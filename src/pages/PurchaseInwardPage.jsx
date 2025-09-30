@@ -9,7 +9,7 @@ const PurchaseInwardPage = () => {
     const { user } = useAuth();
     const userRole = getUserRole();
     const [purchases, setPurchases] = useState([]);
-    const [loading, setLoading] = useState(true); // Start loading initially
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedPurchase, setSelectedPurchase] = useState(null);
@@ -20,11 +20,9 @@ const PurchaseInwardPage = () => {
         [userRole]
     );
 
-    // 👇 FETCH FUNCTION IS NOW MORE ROBUST
     const fetchPurchases = useCallback(async () => {
-        // Double-check permissions and user object existence
         if (!canViewPurchases || !user) {
-            setLoading(false); // Stop loading if user isn't authorized or loaded
+            setLoading(false);
             return;
         }
 
@@ -32,9 +30,8 @@ const PurchaseInwardPage = () => {
 
         let storeIdToFetch;
         if (userRole === USER_ROLES.SUPER_ADMIN) {
-            storeIdToFetch = null; // Super Admin fetches all
+            storeIdToFetch = null;
         } else {
-            // For other roles, storeId is mandatory
             if (!user.storeId) {
                 console.error("User is not a Super Admin and has no associated storeId.");
                 setError("Your account is not linked to a store. Please contact an administrator.");
@@ -67,20 +64,15 @@ const PurchaseInwardPage = () => {
             console.error('Error fetching purchases:', error);
             setPurchases([]);
         } finally {
-            // Stop loading only after the API call is complete (success or fail)
             setLoading(false);
         }
-    }, [canViewPurchases, userRole, user]); // Depend on the whole `user` object
+    }, [canViewPurchases, userRole, user]);
 
-    // 👇 USEEFFECT IS NOW SIMPLER AND SAFER
     useEffect(() => {
-        // If the user object is available, fetch the data.
-        // If not, the component remains in its initial `loading` state,
-        // patiently waiting for the user object to load.
         if (user) {
             fetchPurchases();
         }
-    }, [user, fetchPurchases]); // Re-run this effect when `user` is available
+    }, [user, fetchPurchases]);
 
     const filteredPurchases = useMemo(() => {
         if (!searchTerm) return purchases;
