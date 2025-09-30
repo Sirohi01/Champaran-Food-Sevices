@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import SpriteIcons from '../../../components/SpriteIcons';
-import { getUserData } from '../../../services/coreServices';
-
+import { getUserData,getTodaysPurchaseOrders } from '../../../services/coreServices';
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -9,7 +8,8 @@ const AdminDashboard = () => {
     totalRevenue: '₹0',
     todaySales: 0,
     activeCustomers: 0,
-    lowStockItems: 0
+    lowStockItems: 0,
+    todayPurchaseOrders: 0
   });
   const [recentActivities, setRecentActivities] = useState([]);
   const [systemAlerts, setSystemAlerts] = useState([]);
@@ -26,6 +26,10 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       
+      // Today's Purchase Orders API call
+      const purchaseOrders = await getTodaysPurchaseOrders();
+      const todayPOCount = purchaseOrders?.length || 0;
+
       // Mock data for specific store dashboard
       setStats({
         totalUsers: 45,
@@ -33,7 +37,8 @@ const AdminDashboard = () => {
         totalRevenue: '₹2.8L',
         todaySales: 42,
         activeCustomers: 156,
-        lowStockItems: 12
+        lowStockItems: 12,
+        todayPurchaseOrders: todayPOCount
       });
 
       setRecentActivities([
@@ -175,12 +180,13 @@ const AdminDashboard = () => {
     }]
   };
 
+  // Dashboard stats
   const dashboardStats = [
     { 
-      label: 'Store Staff', 
-      value: '45', 
-      delta: '8 active today', 
-      icon: 'users', 
+      label: 'Today\'s Purchase Orders', 
+      value: stats.todayPurchaseOrders.toString(), 
+      delta: `${stats.todayPurchaseOrders} pending approval`, 
+      icon: 'shopping-cart', 
       color: 'text-blue-600', 
       bg: 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30',
       border: 'border-l-4 border-blue-500',
@@ -210,7 +216,7 @@ const AdminDashboard = () => {
       label: 'Today\'s Sales', 
       value: '42', 
       delta: '₹68,420 revenue', 
-      icon: 'shopping-cart', 
+      icon: 'trending-up', 
       color: 'text-orange-600', 
       bg: 'bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30',
       border: 'border-l-4 border-orange-500',
@@ -238,22 +244,7 @@ const AdminDashboard = () => {
     }
   ];
 
-  const getTrendIcon = (trend) => {
-    switch (trend) {
-      case 'up': return '↗️';
-      case 'down': return '↘️';
-      default: return '→';
-    }
-  };
-
-  const getTrendColor = (trend) => {
-    switch (trend) {
-      case 'up': return 'text-green-600 dark:text-green-400';
-      case 'down': return 'text-red-600 dark:text-red-400';
-      default: return 'text-gray-600 dark:text-gray-400';
-    }
-  };
-
+  // Chart rendering functions - YEH ADD KARO
   const renderBarChart = (data) => {
     const maxValue = Math.max(...data.datasets[0].data);
     return (
@@ -289,6 +280,12 @@ const AdminDashboard = () => {
   const renderPieChart = (data, size = 120) => {
     const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
     let cumulativePercent = 0;
+
+    const getCoordinatesForPercent = (percent) => {
+      const x = Math.cos(2 * Math.PI * percent);
+      const y = Math.sin(2 * Math.PI * percent);
+      return [50 + x * 40, 50 + y * 40];
+    };
 
     return (
       <div className="relative" style={{ width: size, height: size }}>
@@ -331,6 +328,25 @@ const AdminDashboard = () => {
 
   const renderLineChart = (data) => {
     const maxValue = Math.max(...data.datasets[0].data);
+    
+    const getLinePath = (data, maxValue, width, height) => {
+      const points = data.map((value, index) => {
+        const x = (index / (data.length - 1)) * width;
+        const y = height - (value / maxValue) * height;
+        return `${x},${y}`;
+      });
+      return `M ${points.join(' L ')}`;
+    };
+
+    const getAreaPath = (data, maxValue, width, height) => {
+      const points = data.map((value, index) => {
+        const x = (index / (data.length - 1)) * width;
+        const y = height - (value / maxValue) * height;
+        return `${x},${y}`;
+      });
+      return `M 0,${height} L ${points.join(' L ')} L ${width},${height} Z`;
+    };
+
     return (
       <div className="relative h-48 p-4">
         <svg width="100%" height="100%" viewBox="0 0 400 160" className="overflow-visible">
@@ -404,29 +420,20 @@ const AdminDashboard = () => {
     );
   };
 
-  // Helper functions for chart rendering
-  const getCoordinatesForPercent = (percent) => {
-    const x = Math.cos(2 * Math.PI * percent);
-    const y = Math.sin(2 * Math.PI * percent);
-    return [50 + x * 40, 50 + y * 40];
+  const getTrendIcon = (trend) => {
+    switch (trend) {
+      case 'up': return '↗️';
+      case 'down': return '↘️';
+      default: return '→';
+    }
   };
 
-  const getLinePath = (data, maxValue, width, height) => {
-    const points = data.map((value, index) => {
-      const x = (index / (data.length - 1)) * width;
-      const y = height - (value / maxValue) * height;
-      return `${x},${y}`;
-    });
-    return `M ${points.join(' L ')}`;
-  };
-
-  const getAreaPath = (data, maxValue, width, height) => {
-    const points = data.map((value, index) => {
-      const x = (index / (data.length - 1)) * width;
-      const y = height - (value / maxValue) * height;
-      return `${x},${y}`;
-    });
-    return `M 0,${height} L ${points.join(' L ')} L ${width},${height} Z`;
+  const getTrendColor = (trend) => {
+    switch (trend) {
+      case 'up': return 'text-green-600 dark:text-green-400';
+      case 'down': return 'text-red-600 dark:text-red-400';
+      default: return 'text-gray-600 dark:text-gray-400';
+    }
   };
 
   if (loading) {
@@ -472,7 +479,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Stats Grid - 3x2 layout */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
         {dashboardStats.map((stat, index) => (
           <div 
@@ -496,11 +503,12 @@ const AdminDashboard = () => {
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div 
                   className={`h-2 rounded-full transition-all duration-1000 ${
-                    stat.icon === 'users' ? 'bg-blue-500' :
+                    stat.icon === 'shopping-cart' ? 'bg-blue-500' :
                     stat.icon === 'package' ? 'bg-green-500' :
                     stat.icon === 'rupee' ? 'bg-purple-500' :
-                    stat.icon === 'shopping-cart' ? 'bg-orange-500' :
-                    stat.icon === 'warning' ? 'bg-red-500' : 'bg-teal-500'
+                    stat.icon === 'trending-up' ? 'bg-orange-500' :
+                    stat.icon === 'users' ? 'bg-teal-500' :
+                    stat.icon === 'warning' ? 'bg-red-500' : 'bg-blue-500'
                   }`}
                   style={{ width: `${Math.min(100, (parseInt(stat.value.replace(/[^0-9]/g, '')) / 150) * 2)}%` }}
                 ></div>

@@ -178,6 +178,18 @@ export const createPurchaseInward = async (purchaseData) => {
   }
 };
 
+export const getTodaysPurchaseOrders = async () => {
+  try {
+    const response = await callApi({
+      endpoint: "api/v1/inwards/today", 
+      method: "GET",
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Failed to fetch today's purchase orders:", error.response?.data?.message || error.message);
+    return []; 
+  }
+};
 
 export const addPoStockIn = async (stockData) => {
   try {
