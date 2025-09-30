@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
             const storedUser = localStorage.getItem('user_data');
             const storedToken = localStorage.getItem('token');
             const storedRole = localStorage.getItem('user_role');
-
             if (storedUser && storedToken && storedRole) {
                 const user = JSON.parse(storedUser);
                 setAuthData({
