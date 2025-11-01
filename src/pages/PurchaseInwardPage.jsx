@@ -37,7 +37,7 @@ const PurchaseInwardPage = () => {
                 setError("Your account is not linked to a store. Please contact an administrator.");
                 setPurchases([]);
                 setLoading(false);
-                return; // Stop execution
+                return;
             }
             storeIdToFetch = user.storeId;
         }

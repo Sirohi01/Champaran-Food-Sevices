@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import SpriteIcons from '../../../components/SpriteIcons';
-import { getUserData,getTodaysPurchaseOrders } from '../../../services/coreServices';
+import { getUserData, getTodaysPurchaseOrders } from '../../../services/coreServices';
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -25,12 +25,8 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      
-      // Today's Purchase Orders API call
       const purchaseOrders = await getTodaysPurchaseOrders();
       const todayPOCount = purchaseOrders?.length || 0;
-
-      // Mock data for specific store dashboard
       setStats({
         totalUsers: 45,
         totalProducts: 1280,
@@ -179,8 +175,6 @@ const AdminDashboard = () => {
       pointRadius: 6
     }]
   };
-
-  // Dashboard stats
   const dashboardStats = [
     { 
       label: 'Today\'s Purchase Orders', 
