@@ -186,16 +186,16 @@ const AdminDashboard = () => {
       border: 'border-l-4 border-blue-500',
       trend: 'up'
     },
-    { 
-      label: 'Total Products', 
-      value: '1,280', 
-      delta: '12 low stock', 
-      icon: 'package', 
-      color: 'text-green-600', 
-      bg: 'bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30',
-      border: 'border-l-4 border-green-500',
-      trend: 'stable'
-    },
+    // { 
+    //   label: 'Total Products', 
+    //   value: '1,280', 
+    //   delta: '12 low stock', 
+    //   icon: 'package', 
+    //   color: 'text-green-600', 
+    //   bg: 'bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30',
+    //   border: 'border-l-4 border-green-500',
+    //   trend: 'stable'
+    // },
     { 
       label: 'Monthly Revenue', 
       value: '₹2.8L', 
@@ -216,26 +216,26 @@ const AdminDashboard = () => {
       border: 'border-l-4 border-orange-500',
       trend: 'up'
     },
-    { 
-      label: 'Active Customers', 
-      value: '156', 
-      delta: '45 new this month', 
-      icon: 'users', 
-      color: 'text-teal-600', 
-      bg: 'bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30',
-      border: 'border-l-4 border-teal-500',
-      trend: 'up'
-    },
-    { 
-      label: 'Low Stock Items', 
-      value: '12', 
-      delta: '3 out of stock', 
-      icon: 'warning', 
-      color: 'text-red-600', 
-      bg: 'bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30',
-      border: 'border-l-4 border-red-500',
-      trend: 'down'
-    }
+    // { 
+    //   label: 'Active Customers', 
+    //   value: '156', 
+    //   delta: '45 new this month', 
+    //   icon: 'users', 
+    //   color: 'text-teal-600', 
+    //   bg: 'bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30',
+    //   border: 'border-l-4 border-teal-500',
+    //   trend: 'up'
+    // },
+    // { 
+    //   label: 'Low Stock Items', 
+    //   value: '12', 
+    //   delta: '3 out of stock', 
+    //   icon: 'warning', 
+    //   color: 'text-red-600', 
+    //   bg: 'bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30',
+    //   border: 'border-l-4 border-red-500',
+    //   trend: 'down'
+    // }
   ];
 
   // Chart rendering functions - YEH ADD KARO
