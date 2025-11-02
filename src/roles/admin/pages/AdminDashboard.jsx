@@ -26,7 +26,7 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       const purchaseOrders = await getTodaysPurchaseOrders();
-      const todayPOCount = purchaseOrders?.length || 0;
+      const todayPOCount = purchaseOrders?.data?.count || 0;
       setStats({
         totalUsers: 45,
         totalProducts: 1280,
